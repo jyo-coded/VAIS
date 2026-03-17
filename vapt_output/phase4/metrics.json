@@ -1,0 +1,30 @@
+{
+  "classifier": {
+    "accuracy": 0.5,
+    "f1_score": 0.0,
+    "auc_roc": 0.5,
+    "train_time": 0.198
+  },
+  "regressor": {
+    "mae": 0.0163,
+    "r2_score": 0.972,
+    "train_time": 0.359
+  },
+  "feature_importances": {
+    "cwe_cvss_score": 0.0,
+    "severity_score": 0.0,
+    "confidence": 0.0,
+    "reachable_from_entry": 0.0,
+    "has_extern_input": 0.0,
+    "call_depth": 0.0,
+    "in_loop": 0.0,
+    "pointer_ops": 0.0,
+    "unsafe_api_count": 0.0,
+    "alloc_without_free": 0.0,
+    "loop_depth": 0.0,
+    "language_risk": 0.0
+  },
+  "total_time": 0.559,
+  "n_train": 8,
+  "n_val": 2
+}

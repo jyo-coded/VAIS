@@ -1,0 +1,678 @@
+{
+  "total_steps": 36,
+  "total_decisions": 12,
+  "errors": [],
+  "duration_s": 101.699,
+  "steps": [
+    {
+      "timestamp": 0.0,
+      "vuln_id": "VAPT-C-008",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-008",
+        "cwe": "CWE-121",
+        "rule": "gets_unbounded_read",
+        "title": "Unbounded Input via gets()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:16",
+        "function": "read_input",
+        "severity": "CRITICAL",
+        "ml_severity": "CRITICAL",
+        "exploit_prob": 0.5,
+        "risk_score": 0.98,
+        "composite_risk": 0.98,
+        "reachable": true,
+        "extern_input": true,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      15 |     printf(\"Enter your name: \");\n>>>   16 |     gets(buf);                     /* CWE-120: removed from C11 */\n      17 |     printf(\"Got: %s\\n\", buf);",
+        "description": "`gets()` reads from stdin with no length limit and will overflow the destination buffer if input exceeds its size. This function is so dangerous it was removed from the C11 standard. Replace with `fgets(buf, sizeof(buf), stdin)`.",
+        "available_strategies": [
+          "add_stack_bounds_check",
+          "replace_with_safe_alternative"
+        ],
+        "recommended_strategy": "add_stack_bounds_check"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 0.001,
+      "vuln_id": "VAPT-C-008",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-121",
+        "cvss_score": 7.8,
+        "severity": "HIGH",
+        "mitigation": "Review OWASP and CERT guidelines for this CWE.",
+        "reference": "https://cwe.mitre.org/data/definitions/121.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 10.828,
+      "vuln_id": "VAPT-C-008",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"replace_with_safe_alternative\", \"reasoning\": \"The gets() function is a legacy function that has been removed from the C11 standard, and it is not recommended to use it due to its potential vulnerabilities. Replacing it with a safer alternative, such as fgets(), will help to mitigate the risk of buffer overflow attacks.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 10.828,
+      "vuln_id": "VAPT-C-025",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-025",
+        "cwe": "CWE-120",
+        "rule": "strcpy_overflow",
+        "title": "Buffer Overflow via strcpy()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:36",
+        "function": "process_data",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8925,
+        "composite_risk": 0.8925,
+        "reachable": false,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      35 |     if (!ptr) return;\n>>>   36 |     strcpy(ptr, \"sensitive_data\");\n      37 |     free(ptr);",
+        "description": "`strcpy()` copies data into a destination buffer without checking its size. If the source string exceeds the destination buffer, memory beyond the buffer will be overwritten, potentially allowing arbitrary code execution (CWE-120). Replace with `strncpy()` or `strlcpy()` with explicit size limits.",
+        "available_strategies": [
+          "replace_strcpy_with_strncpy",
+          "replace_gets_with_fgets",
+          "replace_sprintf_with_snprintf",
+          "add_bounds_check"
+        ],
+        "recommended_strategy": "replace_strcpy_with_strncpy"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 10.828,
+      "vuln_id": "VAPT-C-025",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-120",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "mitigation": "Use bounded string functions: strncpy, strlcpy, snprintf. Always check buffer size.",
+        "reference": "https://cwe.mitre.org/data/definitions/120.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 20.822,
+      "vuln_id": "VAPT-C-025",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"replace_strcpy_with_strncpy\", \"reasoning\": \"The vulnerability is caused by a buffer overflow due to the use of strcpy, which can be mitigated by replacing it with strncpy, which is a safer version of strcpy that allows for a maximum number of characters to be copied.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 20.822,
+      "vuln_id": "VAPT-C-001",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-001",
+        "cwe": "CWE-120",
+        "rule": "strcpy_overflow",
+        "title": "Buffer Overflow via strcpy()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:8",
+        "function": "greet_user",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8887,
+        "composite_risk": 0.8887,
+        "reachable": true,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "       7 |     char buffer[64];\n>>>    8 |     strcpy(buffer, name);          /* CWE-120: no bounds check */\n       9 |     printf(\"Hello, %s!\\n\", buffer);",
+        "description": "`strcpy()` copies data into a destination buffer without checking its size. If the source string exceeds the destination buffer, memory beyond the buffer will be overwritten, potentially allowing arbitrary code execution (CWE-120). Replace with `strncpy()` or `strlcpy()` with explicit size limits.",
+        "available_strategies": [
+          "replace_strcpy_with_strncpy",
+          "replace_gets_with_fgets",
+          "replace_sprintf_with_snprintf",
+          "add_bounds_check"
+        ],
+        "recommended_strategy": "replace_strcpy_with_strncpy"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 20.822,
+      "vuln_id": "VAPT-C-001",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-120",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "mitigation": "Use bounded string functions: strncpy, strlcpy, snprintf. Always check buffer size.",
+        "reference": "https://cwe.mitre.org/data/definitions/120.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 29.744,
+      "vuln_id": "VAPT-C-001",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"replace_strcpy_with_strncpy\", \"reasoning\": \"The vulnerability is caused by a lack of bounds checking in the strcpy function, which can lead to buffer overflow attacks. Replacing strcpy with strncpy, which has built-in bounds checking, can help prevent these types of attacks.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 29.744,
+      "vuln_id": "VAPT-C-002",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-002",
+        "cwe": "CWE-416",
+        "rule": "use_after_free",
+        "title": "Potential Use-After-Free",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:38",
+        "function": "process_data",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8727,
+        "composite_risk": 0.8727,
+        "reachable": false,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      36 |     strcpy(ptr, \"sensitive_data\");\n>>>   37 |     free(ptr);\n>>>   38 |     printf(\"Data: %s\\n\", ptr);    /* CWE-416: use after free */\n      39 | }",
+        "description": "Memory allocated at line 34 is freed at line 37, but the pointer may be used again at line 38. Accessing freed memory causes undefined behavior and can be exploited for arbitrary code execution (CWE-416). Set pointer to NULL immediately after free().",
+        "available_strategies": [
+          "set_pointer_null_after_free",
+          "use_ownership_pattern"
+        ],
+        "recommended_strategy": "set_pointer_null_after_free"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 29.744,
+      "vuln_id": "VAPT-C-002",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-416",
+        "cvss_score": 8.1,
+        "severity": "HIGH",
+        "mitigation": "Set pointers to NULL immediately after free(). Use ownership patterns to track lifetimes.",
+        "reference": "https://cwe.mitre.org/data/definitions/416.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 35.965,
+      "vuln_id": "VAPT-C-002",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"set_pointer_null_after_free\", \"reasoning\": \"To prevent the use after free vulnerability, we should set the pointer to NULL immediately after freeing it to prevent any further use of the pointer.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 35.965,
+      "vuln_id": "VAPT-C-013",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-013",
+        "cwe": "CWE-134",
+        "rule": "format_string_injection",
+        "title": "Format String Injection via printf()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:22",
+        "function": "show_message",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8695,
+        "composite_risk": 0.8695,
+        "reachable": true,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      21 | void show_message(char *msg) {\n>>>   22 |     printf(msg);                   /* CWE-134: user controls format */\n      23 | }",
+        "description": "`printf()` is called with a non-literal first argument. If this value originates from user input, an attacker can inject format specifiers (%n, %x) to read/write arbitrary memory locations (CWE-134). Always use `printf(\"%s\", user_input)` with a literal format string.",
+        "available_strategies": [
+          "add_literal_format_string",
+          "sanitize_format_argument"
+        ],
+        "recommended_strategy": "add_literal_format_string"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 35.965,
+      "vuln_id": "VAPT-C-013",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-134",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "mitigation": "Always use a string literal as the format argument. Never pass user input as format string.",
+        "reference": "https://cwe.mitre.org/data/definitions/134.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 46.152,
+      "vuln_id": "VAPT-C-013",
+      "action": "llm_response",
+      "result": "\n{\"strategy\": \"add_literal_format_string\", \"reasoning\": \"The vulnerability is caused by the user controlling the format string, which can lead to a format string vulnerability. To mitigate this, we can add a literal format string to the printf function, which will ensure that the format string is a constant and cannot be controlled by the user.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 46.152,
+      "vuln_id": "VAPT-C-016",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-016",
+        "cwe": "CWE-120",
+        "rule": "sprintf_overflow",
+        "title": "Buffer Overflow via sprintf()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:28",
+        "function": "run_file",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8695,
+        "composite_risk": 0.8695,
+        "reachable": true,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      27 |     char cmd[256];\n>>>   28 |     sprintf(cmd, \"cat %s\", filename);\n      29 |     system(cmd);                   /* CWE-78: shell injection */",
+        "description": "`sprintf()` writes formatted output into a buffer without checking its size. A format string that expands larger than the buffer causes overflow. Replace with `snprintf(buf, sizeof(buf), ...)` to enforce bounds.",
+        "available_strategies": [
+          "replace_strcpy_with_strncpy",
+          "replace_gets_with_fgets",
+          "replace_sprintf_with_snprintf",
+          "add_bounds_check"
+        ],
+        "recommended_strategy": "replace_strcpy_with_strncpy"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 46.152,
+      "vuln_id": "VAPT-C-016",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-120",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "mitigation": "Use bounded string functions: strncpy, strlcpy, snprintf. Always check buffer size.",
+        "reference": "https://cwe.mitre.org/data/definitions/120.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 54.881,
+      "vuln_id": "VAPT-C-016",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"replace_sprintf_with_snprintf\", \"reasoning\": \"The vulnerability is caused by the use of sprintf() function, which is prone to buffer overflow attacks. Replacing it with snprintf() function, which is a safer alternative, can help mitigate the risk of this vulnerability.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 54.881,
+      "vuln_id": "VAPT-C-017",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-017",
+        "cwe": "CWE-134",
+        "rule": "format_string_injection",
+        "title": "Format String Injection via sprintf()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:28",
+        "function": "run_file",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8695,
+        "composite_risk": 0.8695,
+        "reachable": true,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      27 |     char cmd[256];\n>>>   28 |     sprintf(cmd, \"cat %s\", filename);\n      29 |     system(cmd);                   /* CWE-78: shell injection */",
+        "description": "`sprintf()` is called with a non-literal first argument. If this value originates from user input, an attacker can inject format specifiers (%n, %x) to read/write arbitrary memory locations (CWE-134). Always use `sprintf(\"%s\", user_input)` with a literal format string.",
+        "available_strategies": [
+          "add_literal_format_string",
+          "sanitize_format_argument"
+        ],
+        "recommended_strategy": "add_literal_format_string"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 54.881,
+      "vuln_id": "VAPT-C-017",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-134",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "mitigation": "Always use a string literal as the format argument. Never pass user input as format string.",
+        "reference": "https://cwe.mitre.org/data/definitions/134.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 64.355,
+      "vuln_id": "VAPT-C-017",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"add_literal_format_string\", \"reasoning\": \"The vulnerability is caused by the use of a user-supplied string as the format argument for the sprintf function, which can lead to shell injection. By using a string literal as the format argument, we can avoid this vulnerability and ensure that the code is secure.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 64.355,
+      "vuln_id": "VAPT-C-036",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-036",
+        "cwe": "CWE-120",
+        "rule": "sprintf_overflow",
+        "title": "Buffer Overflow via sprintf()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:50",
+        "function": "build_query",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8695,
+        "composite_risk": 0.8695,
+        "reachable": true,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      49 |     char query[64];\n>>>   50 |     sprintf(query, \"SELECT * FROM users WHERE name='%s'\", user_input);\n      51 |     printf(\"Query: %s\\n\", query); /* CWE-120: query overflows buf */",
+        "description": "`sprintf()` writes formatted output into a buffer without checking its size. A format string that expands larger than the buffer causes overflow. Replace with `snprintf(buf, sizeof(buf), ...)` to enforce bounds.",
+        "available_strategies": [
+          "replace_strcpy_with_strncpy",
+          "replace_gets_with_fgets",
+          "replace_sprintf_with_snprintf",
+          "add_bounds_check"
+        ],
+        "recommended_strategy": "replace_strcpy_with_strncpy"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 64.355,
+      "vuln_id": "VAPT-C-036",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-120",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "mitigation": "Use bounded string functions: strncpy, strlcpy, snprintf. Always check buffer size.",
+        "reference": "https://cwe.mitre.org/data/definitions/120.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 71.06,
+      "vuln_id": "VAPT-C-036",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"replace_sprintf_with_snprintf\", \"reasoning\": \"The vulnerability is caused by a buffer overflow in the sprintf function, which can be mitigated by using the snprintf function with a bounded buffer size.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 71.06,
+      "vuln_id": "VAPT-C-037",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-037",
+        "cwe": "CWE-134",
+        "rule": "format_string_injection",
+        "title": "Format String Injection via sprintf()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:50",
+        "function": "build_query",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8695,
+        "composite_risk": 0.8695,
+        "reachable": true,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      49 |     char query[64];\n>>>   50 |     sprintf(query, \"SELECT * FROM users WHERE name='%s'\", user_input);\n      51 |     printf(\"Query: %s\\n\", query); /* CWE-120: query overflows buf */",
+        "description": "`sprintf()` is called with a non-literal first argument. If this value originates from user input, an attacker can inject format specifiers (%n, %x) to read/write arbitrary memory locations (CWE-134). Always use `sprintf(\"%s\", user_input)` with a literal format string.",
+        "available_strategies": [
+          "add_literal_format_string",
+          "sanitize_format_argument"
+        ],
+        "recommended_strategy": "add_literal_format_string"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 71.06,
+      "vuln_id": "VAPT-C-037",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-134",
+        "cvss_score": 7.5,
+        "severity": "HIGH",
+        "mitigation": "Always use a string literal as the format argument. Never pass user input as format string.",
+        "reference": "https://cwe.mitre.org/data/definitions/134.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 79.773,
+      "vuln_id": "VAPT-C-037",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"add_literal_format_string\", \"reasoning\": \"The vulnerability is caused by passing user input as the format string, which can lead to a format string vulnerability. By using a string literal as the format string, we can avoid this issue and ensure that the query is properly formatted and safe.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 79.773,
+      "vuln_id": "VAPT-C-044",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-044",
+        "cwe": "CWE-125",
+        "rule": "memcpy_no_bounds",
+        "title": "Possible Out-of-Bounds Write via memcpy()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:57",
+        "function": "copy_payload",
+        "severity": "MEDIUM",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8695,
+        "composite_risk": 0.8695,
+        "reachable": true,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      56 |     char dest[128];\n>>>   57 |     memcpy(dest, src, len);        /* CWE-125: len not bounded */\n      58 |     printf(\"Copied.\\n\");",
+        "description": "`memcpy()` is called without a size derived from `sizeof(destination)`. If the copy length exceeds the destination buffer, adjacent memory is overwritten (CWE-125). Always use `sizeof(dest)` or `dest_len` as the size argument.",
+        "available_strategies": [
+          "add_sizeof_bounds_check",
+          "validate_copy_length"
+        ],
+        "recommended_strategy": "add_sizeof_bounds_check"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 79.773,
+      "vuln_id": "VAPT-C-044",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-125",
+        "cvss_score": 6.5,
+        "severity": "MEDIUM",
+        "mitigation": "Review OWASP and CERT guidelines for this CWE.",
+        "reference": "https://cwe.mitre.org/data/definitions/125.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 87.816,
+      "vuln_id": "VAPT-C-044",
+      "action": "llm_response",
+      "result": "\n{\"strategy\": \"validate_copy_length\", \"reasoning\": \"The vulnerability is caused by a buffer overflow due to an unbounded memcpy() call. Validating the length of the copied data can help prevent this vulnerability by ensuring that the copied data is not longer than the destination buffer.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 87.816,
+      "vuln_id": "VAPT-C-003",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-003",
+        "cwe": "CWE-415",
+        "rule": "double_free",
+        "title": "Double-Free Detected",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:44",
+        "function": "cleanup",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8689,
+        "composite_risk": 0.8689,
+        "reachable": true,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      42 | void cleanup(int *data) {\n>>>   43 |     free(data);\n>>>   44 |     free(data);                    /* CWE-415: double free */\n      45 | }",
+        "description": "The same pointer appears to be freed more than once (lines 43, 44). Double-free corrupts the heap allocator and can be exploited to gain code execution (CWE-415). Set pointer to NULL after first free to prevent this.",
+        "available_strategies": [
+          "add_null_check_before_free",
+          "set_pointer_null_after_free"
+        ],
+        "recommended_strategy": "add_null_check_before_free"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 87.816,
+      "vuln_id": "VAPT-C-003",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-415",
+        "cvss_score": 8.1,
+        "severity": "HIGH",
+        "mitigation": "Add NULL check before free(). Set pointer to NULL after first free().",
+        "reference": "https://cwe.mitre.org/data/definitions/415.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 94.525,
+      "vuln_id": "VAPT-C-003",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"add_null_check_before_free\", \"reasoning\": \"The vulnerability is a double free, which can lead to a use-after-free vulnerability. Adding a null check before freeing the pointer again helps to prevent this issue.\"}",
+      "model": "codellama"
+    },
+    {
+      "timestamp": 94.525,
+      "vuln_id": "VAPT-C-020",
+      "action": "analyze",
+      "result": {
+        "vuln_id": "VAPT-C-020",
+        "cwe": "CWE-78",
+        "rule": "command_injection",
+        "title": "Command Injection via system()",
+        "location": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c:29",
+        "function": "run_file",
+        "severity": "HIGH",
+        "ml_severity": "HIGH",
+        "exploit_prob": 0.5,
+        "risk_score": 0.8154,
+        "composite_risk": 0.8154,
+        "reachable": true,
+        "extern_input": false,
+        "call_depth": 1,
+        "in_loop": false,
+        "code_snippet": "      28 |     sprintf(cmd, \"cat %s\", filename);\n>>>   29 |     system(cmd);                   /* CWE-78: shell injection */\n      30 | }",
+        "description": "`system()` passes a string to the OS shell for execution. If any part of this string is user-controlled, an attacker can inject shell metacharacters (`;`, `|`, `&&`) to execute arbitrary commands (CWE-78). Replace with `execve()` with argument arrays \u2014 never pass user input to `system()`.",
+        "available_strategies": [
+          "use_arg_list_no_shell",
+          "sanitize_input"
+        ],
+        "recommended_strategy": "use_arg_list_no_shell"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 94.525,
+      "vuln_id": "VAPT-C-020",
+      "action": "query_nvd",
+      "result": {
+        "cwe_id": "CWE-78",
+        "cvss_score": 9.8,
+        "severity": "CRITICAL",
+        "mitigation": "Never pass user input to shell. Use execve() with argument arrays instead of system().",
+        "reference": "https://cwe.mitre.org/data/definitions/78.html"
+      },
+      "model": "codellama"
+    },
+    {
+      "timestamp": 101.698,
+      "vuln_id": "VAPT-C-020",
+      "action": "llm_response",
+      "result": "{\"strategy\": \"use_arg_list_no_shell\", \"reasoning\": \"The vulnerability is caused by passing user input to the shell, which can lead to shell injection. Using the execve() function with argument arrays instead of system() can help prevent this vulnerability.\"}",
+      "model": "codellama"
+    }
+  ],
+  "decisions": [
+    {
+      "vuln_id": "VAPT-C-008",
+      "strategy": "replace_with_safe_alternative",
+      "reasoning": "The gets() function is a legacy function that has been removed from the C11 standard, and it is not recommended to use it due to its potential vulnerabilities. Replacing it with a safer alternative, such as fgets(), will help to mitigate the risk of buffer overflow attacks."
+    },
+    {
+      "vuln_id": "VAPT-C-025",
+      "strategy": "replace_strcpy_with_strncpy",
+      "reasoning": "The vulnerability is caused by a buffer overflow due to the use of strcpy, which can be mitigated by replacing it with strncpy, which is a safer version of strcpy that allows for a maximum number of characters to be copied."
+    },
+    {
+      "vuln_id": "VAPT-C-001",
+      "strategy": "replace_strcpy_with_strncpy",
+      "reasoning": "The vulnerability is caused by a lack of bounds checking in the strcpy function, which can lead to buffer overflow attacks. Replacing strcpy with strncpy, which has built-in bounds checking, can help prevent these types of attacks."
+    },
+    {
+      "vuln_id": "VAPT-C-002",
+      "strategy": "set_pointer_null_after_free",
+      "reasoning": "To prevent the use after free vulnerability, we should set the pointer to NULL immediately after freeing it to prevent any further use of the pointer."
+    },
+    {
+      "vuln_id": "VAPT-C-013",
+      "strategy": "add_literal_format_string",
+      "reasoning": "The vulnerability is caused by the user controlling the format string, which can lead to a format string vulnerability. To mitigate this, we can add a literal format string to the printf function, which will ensure that the format string is a constant and cannot be controlled by the user."
+    },
+    {
+      "vuln_id": "VAPT-C-016",
+      "strategy": "replace_sprintf_with_snprintf",
+      "reasoning": "The vulnerability is caused by the use of sprintf() function, which is prone to buffer overflow attacks. Replacing it with snprintf() function, which is a safer alternative, can help mitigate the risk of this vulnerability."
+    },
+    {
+      "vuln_id": "VAPT-C-017",
+      "strategy": "add_literal_format_string",
+      "reasoning": "The vulnerability is caused by the use of a user-supplied string as the format argument for the sprintf function, which can lead to shell injection. By using a string literal as the format argument, we can avoid this vulnerability and ensure that the code is secure."
+    },
+    {
+      "vuln_id": "VAPT-C-036",
+      "strategy": "replace_sprintf_with_snprintf",
+      "reasoning": "The vulnerability is caused by a buffer overflow in the sprintf function, which can be mitigated by using the snprintf function with a bounded buffer size."
+    },
+    {
+      "vuln_id": "VAPT-C-037",
+      "strategy": "add_literal_format_string",
+      "reasoning": "The vulnerability is caused by passing user input as the format string, which can lead to a format string vulnerability. By using a string literal as the format string, we can avoid this issue and ensure that the query is properly formatted and safe."
+    },
+    {
+      "vuln_id": "VAPT-C-044",
+      "strategy": "validate_copy_length",
+      "reasoning": "The vulnerability is caused by a buffer overflow due to an unbounded memcpy() call. Validating the length of the copied data can help prevent this vulnerability by ensuring that the copied data is not longer than the destination buffer."
+    },
+    {
+      "vuln_id": "VAPT-C-003",
+      "strategy": "add_null_check_before_free",
+      "reasoning": "The vulnerability is a double free, which can lead to a use-after-free vulnerability. Adding a null check before freeing the pointer again helps to prevent this issue."
+    },
+    {
+      "vuln_id": "VAPT-C-020",
+      "strategy": "use_arg_list_no_shell",
+      "reasoning": "The vulnerability is caused by passing user input to the shell, which can lead to shell injection. Using the execve() function with argument arrays instead of system() can help prevent this vulnerability."
+    }
+  ]
+}

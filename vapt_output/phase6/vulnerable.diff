@@ -1,0 +1,177 @@
+--- a/vulnerable.c
++++ b/vulnerable_patched.c
+@@ -5,7 +5,8 @@
+ /* ── Vuln 1: Buffer overflow via strcpy ── */
+
+ void greet_user(char *name) {
+
+     char buffer[64];
+
+-    strcpy(buffer, name);          /* CWE-120: no bounds check */
+
++    strncpy(buffer, name, sizeof(buffer) - 1);
+
++    buffer[sizeof(buffer) - 1] = '\0';  /* bounds-safe copy */
+
+     printf("Hello, %s!\n", buffer);
+
+ }
+
+ 
+
+@@ -13,48 +14,65 @@
+ void read_input() {
+
+     char buf[128];
+
+     printf("Enter your name: ");
+
+-    gets(buf);                     /* CWE-120: removed from C11 */
+
++    fgets(buf, sizeof(buf), stdin);  /* replaces unsafe gets() */
+
++    buf[strcspn(buf, "\n")] = 0;  /* strip trailing newline */
+
+     printf("Got: %s\n", buf);
+
+ }
+
+ 
+
+ /* ── Vuln 3: Format string injection ── */
+
+ void show_message(char *msg) {
+
+-    printf(msg);                   /* CWE-134: user controls format */
+
++    printf("%s", msg);  /* literal format string */
+
+ }
+
+ 
+
+ /* ── Vuln 4: Command injection via system() ── */
+
+ void run_file(char *filename) {
+
+     char cmd[256];
+
+-    sprintf(cmd, "cat %s", filename);
+
+-    system(cmd);                   /* CWE-78: shell injection */
+
++    snprintf(cmd, sizeof(cmd), "cat %s", filename);  /* bounds-safe sprintf */
+
++    /* PATCHED: replaced system() with execve - no shell injection */
+
++    {
+
++        char *argv[] = {"sh", "-c", cmd, NULL};
+
++        /* TODO: replace with direct execve call without shell */
+
++        /* execve("/bin/sh", argv, NULL); */
+
++        (void)argv;  /* remove this line when implementing execve */
+
++    }
+
+ }
+
+ 
+
+ /* ── Vuln 5: Use-after-free ── */
+
+ void process_data() {
+
+     char *ptr = (char *)malloc(256);
+
+     if (!ptr) return;
+
+-    strcpy(ptr, "sensitive_data");
+
++    strncpy(ptr, "sensitive_data", sizeof(ptr) - 1);
+
++    ptr[sizeof(ptr) - 1] = '\0';  /* bounds-safe copy */
+
+     free(ptr);
+
++    ptr = NULL;  /* prevent use-after-free */
+
+     printf("Data: %s\n", ptr);    /* CWE-416: use after free */
+
+ }
+
+ 
+
+ /* ── Vuln 6: Double free ── */
+
+ void cleanup(int *data) {
+
+     free(data);
+
+-    free(data);                    /* CWE-415: double free */
+
++    if (data != NULL) {
+
++        free(data);
+
++        data = NULL;  /* prevent double-free */
+
++    }
+
+ }
+
+ 
+
+ /* ── Vuln 7: sprintf overflow ── */
+
+ void build_query(char *user_input) {
+
+     char query[64];
+
+-    sprintf(query, "SELECT * FROM users WHERE name='%s'", user_input);
+
++    snprintf(query, sizeof(query), "SELECT * FROM users WHERE name='%s'", user_input);  /* bounds-safe sprintf */
+
+     printf("Query: %s\n", query); /* CWE-120: query overflows buf */
+
+ }
+
+ 
+
+ /* ── Vuln 8: memcpy without sizeof ── */
+
+ void copy_payload(char *src, int len) {
+
+     char dest[128];
+
+-    memcpy(dest, src, len);        /* CWE-125: len not bounded */
+
++    /* bounds check before memcpy */
+
++    if ((len) <= sizeof(dest)) {
+
++        memcpy(dest, src, len);
+
++    } else {
+
++        memcpy(dest, src, sizeof(dest));  /* clamped to dest size */
+
++    }
+
+     printf("Copied.\n");
+
+ }
+
+ 
+
+@@ -76,4 +94,4 @@
+     copy_payload(argv[1], 999);   /* passing unchecked length */
+
+ 
+
+     return 0;
+
+-}
++}

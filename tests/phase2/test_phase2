@@ -1,0 +1,245 @@
+"""
+tests/phase2/test_phase2.py
+───────────────────────────
+Phase 2 test suite.
+Run: pytest tests/phase2/ -v
+
+Tests cover:
+  - VulnObject schema and properties
+  - C rules firing correctly on vulnerable.c
+  - Python rules firing on vulnerable.py
+  - Go rules firing on vulnerable.go
+  - VulnCollection deduplication
+  - Phase 2 end-to-end
+"""
+
+from __future__ import annotations
+import pytest
+from pathlib import Path
+
+SAMPLES = Path(__file__).parent.parent / "samples"
+
+
+# ─── VulnObject Tests ─────────────────────────────────────────────────────────
+
+class TestVulnObject:
+
+    def test_composite_risk_no_ml(self):
+        from rules.vuln_object import VulnObject, CWE, Severity, VulnStatus
+        v = VulnObject(
+            vuln_id="TEST-001", cwe=CWE.BUFFER_OVERFLOW,
+            rule_name="test", source_file="x.c", language="c",
+            function_name="main", line_start=10, line_end=10,
+            title="Test", description="Test", code_snippet="",
+            severity=Severity.HIGH, confidence=0.9,
+        )
+        assert 0.0 < v.composite_risk <= 1.0
+
+    def test_is_high_risk(self):
+        from rules.vuln_object import VulnObject, CWE, Severity
+        v = VulnObject(
+            vuln_id="T-001", cwe=CWE.BUFFER_OVERFLOW, rule_name="r",
+            source_file="f.c", language="c", function_name="f",
+            line_start=1, line_end=1, title="T", description="D",
+            code_snippet="", severity=Severity.CRITICAL, confidence=1.0,
+        )
+        assert v.is_high_risk is True
+
+    def test_serialization(self):
+        from rules.vuln_object import VulnObject, CWE, Severity
+        v = VulnObject(
+            vuln_id="T-001", cwe=CWE.COMMAND_INJECTION, rule_name="r",
+            source_file="f.c", language="c", function_name="f",
+            line_start=5, line_end=5, title="T", description="D",
+            code_snippet="x", severity=Severity.HIGH, confidence=0.8,
+        )
+        d = v.to_dict()
+        assert d["vuln_id"] == "T-001"
+        assert d["cwe"] == "CWE-78"
+        assert "composite_risk" in d
+
+
+# ─── VulnCollection Tests ─────────────────────────────────────────────────────
+
+class TestVulnCollection:
+
+    def test_deduplication(self):
+        from rules.vuln_object import VulnObject, VulnCollection, CWE, Severity
+        col = VulnCollection()
+        v = VulnObject(
+            vuln_id="T-001", cwe=CWE.BUFFER_OVERFLOW, rule_name="r",
+            source_file="f.c", language="c", function_name="f",
+            line_start=5, line_end=5, title="T", description="D",
+            code_snippet="", severity=Severity.HIGH, confidence=0.8,
+        )
+        col.add(v)
+        col.add(v)  # duplicate
+        assert len(col) == 1
+
+    def test_sorted_by_risk(self):
+        from rules.vuln_object import VulnObject, VulnCollection, CWE, Severity
+        col = VulnCollection()
+        for sev, conf in [(Severity.LOW, 0.5), (Severity.CRITICAL, 0.99), (Severity.MEDIUM, 0.6)]:
+            v = VulnObject(
+                vuln_id=col.generate_id("C"), cwe=CWE.BUFFER_OVERFLOW, rule_name="r",
+                source_file="f.c", language="c", function_name="f",
+                line_start=1, line_end=1, title="T", description="D",
+                code_snippet="", severity=sev, confidence=conf,
+            )
+            col.add(v)
+        ranked = col.sorted_by_risk()
+        assert ranked[0].severity == Severity.CRITICAL
+
+    def test_save_json(self, tmp_path):
+        from rules.vuln_object import VulnObject, VulnCollection, CWE, Severity
+        import json
+        col = VulnCollection()
+        v = VulnObject(
+            vuln_id="T-001", cwe=CWE.BUFFER_OVERFLOW, rule_name="r",
+            source_file="f.c", language="c", function_name="f",
+            line_start=1, line_end=1, title="T", description="D",
+            code_snippet="", severity=Severity.HIGH, confidence=0.8,
+        )
+        col.add(v)
+        out = tmp_path / "vulns.json"
+        col.save(str(out))
+        data = json.loads(out.read_text())
+        assert data["total"] == 1
+        assert len(data["vulnerabilities"]) == 1
+
+
+# ─── C Rules Tests ────────────────────────────────────────────────────────────
+
+class TestCRules:
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        from core.phase1 import run_phase1
+        from rules.engine import run_phase2
+        p1 = run_phase1(str(SAMPLES / "vulnerable.c"), verbose=False)
+        self.result = run_phase2(p1, verbose=False)
+        self.vulns = list(self.result.collection)
+
+    def test_detects_vulnerabilities(self):
+        assert len(self.vulns) > 0
+
+    def test_detects_strcpy(self):
+        rules = [v.rule_name for v in self.vulns]
+        assert "strcpy_overflow" in rules
+
+    def test_detects_format_string(self):
+        rules = [v.rule_name for v in self.vulns]
+        assert "format_string_injection" in rules
+
+    def test_detects_command_injection(self):
+        rules = [v.rule_name for v in self.vulns]
+        assert "command_injection" in rules
+
+    def test_all_have_cwe(self):
+        for v in self.vulns:
+            assert v.cwe is not None
+
+    def test_all_have_line_numbers(self):
+        for v in self.vulns:
+            assert v.line_start > 0
+
+    def test_severity_assigned(self):
+        severities = {v.severity for v in self.vulns}
+        assert len(severities) > 0
+
+    def test_high_risk_findings_exist(self):
+        assert any(v.is_high_risk for v in self.vulns)
+
+
+# ─── Python Rules Tests ───────────────────────────────────────────────────────
+
+class TestPythonRules:
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        from core.phase1 import run_phase1
+        from rules.engine import run_phase2
+        p1 = run_phase1(str(SAMPLES / "vulnerable.py"), verbose=False)
+        self.result = run_phase2(p1, verbose=False)
+        self.vulns = list(self.result.collection)
+
+    def test_detects_vulnerabilities(self):
+        assert len(self.vulns) > 0
+
+    def test_detects_eval(self):
+        rules = [v.rule_name for v in self.vulns]
+        assert "eval_exec_injection" in rules
+
+    def test_detects_pickle(self):
+        rules = [v.rule_name for v in self.vulns]
+        assert "unsafe_deserialization" in rules
+
+    def test_detects_subprocess_shell(self):
+        rules = [v.rule_name for v in self.vulns]
+        assert "subprocess_shell_injection" in rules
+
+    def test_language_is_python(self):
+        for v in self.vulns:
+            assert v.language == "python"
+
+
+# ─── Go Rules Tests ───────────────────────────────────────────────────────────
+
+class TestGoRules:
+
+    @pytest.fixture(autouse=True)
+    def setup(self):
+        from core.phase1 import run_phase1
+        from rules.engine import run_phase2
+        p1 = run_phase1(str(SAMPLES / "vulnerable.go"), verbose=False)
+        self.result = run_phase2(p1, verbose=False)
+        self.vulns = list(self.result.collection)
+
+    def test_detects_vulnerabilities(self):
+        assert len(self.vulns) > 0
+
+    def test_detects_exec_command(self):
+        rules = [v.rule_name for v in self.vulns]
+        assert "go_exec_command_injection" in rules
+
+    def test_detects_unsafe_pointer(self):
+        rules = [v.rule_name for v in self.vulns]
+        assert "go_unsafe_pointer" in rules
+
+    def test_language_is_go(self):
+        for v in self.vulns:
+            assert v.language == "go"
+
+
+# ─── Phase 2 End-to-End ───────────────────────────────────────────────────────
+
+class TestPhase2E2E:
+
+    def test_full_scan_samples_folder(self, tmp_path):
+        from core.phase1 import run_phase1
+        from rules.engine import run_phase2
+        p1 = run_phase1(str(SAMPLES), verbose=False)
+        p2 = run_phase2(p1, output_dir=str(tmp_path), verbose=False)
+        assert len(p2.collection) > 0
+        assert p2.files_scanned == 3
+
+    def test_output_json_saved(self, tmp_path):
+        from core.phase1 import run_phase1
+        from rules.engine import run_phase2
+        import json
+        p1 = run_phase1(str(SAMPLES / "vulnerable.c"), verbose=False)
+        p2 = run_phase2(p1, output_dir=str(tmp_path), verbose=False)
+        out_file = tmp_path / "vuln_raw.json"
+        assert out_file.exists()
+        data = json.loads(out_file.read_text())
+        assert "vulnerabilities" in data
+        assert data["total"] > 0
+
+    def test_summary_keys(self):
+        from core.phase1 import run_phase1
+        from rules.engine import run_phase2
+        p1 = run_phase1(str(SAMPLES), verbose=False)
+        p2 = run_phase2(p1, verbose=False)
+        s = p2.summary()
+        for key in ("total", "critical", "high", "medium", "low", "files_scanned"):
+            assert key in s

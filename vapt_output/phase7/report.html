@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VAPT Intelligence System — Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:      #0d1117;
+      --card:    #161b22;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --muted:   #8b949e;
+      --cyan:    #58a6ff;
+      --green:   #3fb950;
+      --red:     #f85149;
+      --orange:  #e3b341;
+      --purple:  #bc8cff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', monospace; }
+    header { background: var(--card); border-bottom: 1px solid var(--border); padding: 20px 40px; }
+    header h1 { color: var(--cyan); font-size: 1.6rem; }
+    header p  { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+    main { max-width: 1400px; margin: 0 auto; padding: 32px 40px; }
+    h2 { color: var(--cyan); font-size: 1.1rem; margin: 32px 0 16px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: center; }
+    .card .num  { font-size: 2.2rem; font-weight: 700; line-height: 1; }
+    .card .label { color: var(--muted); font-size: 0.8rem; margin-top: 6px; }
+    .num.red    { color: var(--red); }
+    .num.orange { color: var(--orange); }
+    .num.cyan   { color: var(--cyan); }
+    .num.green  { color: var(--green); }
+    .num.purple { color: var(--purple); }
+    .charts { display: grid; grid-template-columns: 1fr 2fr; gap: 24px; margin-bottom: 32px; }
+    .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+    .chart-card h3 { color: var(--muted); font-size: 0.85rem; margin-bottom: 16px; }
+    table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 24px; }
+    thead th { background: #1c2128; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    tbody td { padding: 9px 14px; font-size: 0.875rem; border-bottom: 1px solid #21262d; vertical-align: middle; }
+    tbody tr:hover { background: #1c2128; }
+    code { font-family: 'Courier New', monospace; font-size: 0.82rem; color: var(--cyan); background: #1c2128; padding: 1px 5px; border-radius: 3px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+    .badge-critical { background: #3d1212; color: var(--red); border: 1px solid var(--red); }
+    .badge-high     { background: #2d1f0a; color: var(--orange); border: 1px solid var(--orange); }
+    .badge-medium   { background: #2a2208; color: #e3b341; border: 1px solid #e3b341; }
+    .badge-low      { background: #0d2216; color: var(--green); border: 1px solid var(--green); }
+    .badge-info     { background: #1c2128; color: var(--muted); border: 1px solid var(--border); }
+    .risk-high  { color: var(--red); font-weight: 600; }
+    .risk-med   { color: var(--orange); }
+    .risk-low   { color: var(--green); }
+    .text-green { color: var(--green); font-weight: 600; }
+    .text-red   { color: var(--red); }
+    .text-yellow{ color: var(--orange); }
+    .diff-block { background: #0d1117; border: 1px solid var(--border); border-radius: 6px; padding: 16px; font-family: 'Courier New', monospace; font-size: 0.78rem; overflow-x: auto; white-space: pre; line-height: 1.5; color: #cdd9e5; max-height: 600px; overflow-y: auto; }
+    section { margin-bottom: 40px; }
+    footer { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 32px; border-top: 1px solid var(--border); margin-top: 40px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>⚡ VAPT Intelligence System</h1>
+    <p>Agent-Orchestrated Hybrid Static Vulnerability Assessment &nbsp;|&nbsp; Generated: 2026-03-13 22:18:22 &nbsp;|&nbsp; Agent: llm:codellama</p>
+  </header>
+
+  <main>
+    <!-- Summary Cards -->
+    <div class="cards">
+      <div class="card"><div class="num red">1</div><div class="label">CRITICAL</div></div>
+      <div class="card"><div class="num orange">10</div><div class="label">HIGH</div></div>
+      <div class="card"><div class="num" style="color:var(--orange)">1</div><div class="label">MEDIUM</div></div>
+      <div class="card"><div class="num cyan">0</div><div class="label">LOW</div></div>
+      <div class="card"><div class="num purple">12</div><div class="label">TOTAL FINDINGS</div></div>
+      <div class="card"><div class="num green">12</div><div class="label">PATCHES APPLIED</div></div>
+      <div class="card"><div class="num green">67%</div><div class="label">FIX RATE</div></div>
+      <div class="card"><div class="num cyan">12</div><div class="label">AGENT DECISIONS</div></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts">
+      <div class="chart-card">
+        <h3>Severity Distribution</h3>
+        <canvas id="sevChart" height="200"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Risk Score vs Exploit Probability (Top 15)</h3>
+        <canvas id="riskChart" height="200"></canvas>
+      </div>
+    </div>
+
+    <!-- CWE Breakdown Chart -->
+    <section>
+      <h2>CWE Breakdown</h2>
+      <div class="chart-card">
+        <canvas id="cweChart" height="100"></canvas>
+      </div>
+    </section>
+
+    <!-- Findings Table -->
+    <section>
+      <h2>All Findings — Sorted by Risk</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th><th>Severity</th><th>CWE</th><th>Function</th>
+            <th>Line</th><th>Risk Score</th><th>Exploit%</th><th>Strategy</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><code>VAPT-C-008</code></td>
+          <td><span class="badge badge-critical">CRITICAL</span></td>
+          <td>CWE-121</td>
+          <td><code>read_input</code></td>
+          <td>16</td>
+          <td class="risk-high">0.980</td>
+          <td>50%</td>
+          <td><small>replace_with_safe_alternative</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-025</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-120</td>
+          <td><code>process_data</code></td>
+          <td>36</td>
+          <td class="risk-high">0.892</td>
+          <td>50%</td>
+          <td><small>replace_strcpy_with_strncpy</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-001</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-120</td>
+          <td><code>greet_user</code></td>
+          <td>8</td>
+          <td class="risk-high">0.889</td>
+          <td>50%</td>
+          <td><small>replace_strcpy_with_strncpy</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-002</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-416</td>
+          <td><code>process_data</code></td>
+          <td>38</td>
+          <td class="risk-high">0.873</td>
+          <td>50%</td>
+          <td><small>set_pointer_null_after_free</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-013</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-134</td>
+          <td><code>show_message</code></td>
+          <td>22</td>
+          <td class="risk-high">0.870</td>
+          <td>50%</td>
+          <td><small>add_literal_format_string</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-016</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-120</td>
+          <td><code>run_file</code></td>
+          <td>28</td>
+          <td class="risk-high">0.870</td>
+          <td>50%</td>
+          <td><small>replace_sprintf_with_snprintf</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-017</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-134</td>
+          <td><code>run_file</code></td>
+          <td>28</td>
+          <td class="risk-high">0.870</td>
+          <td>50%</td>
+          <td><small>add_literal_format_string</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-036</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-120</td>
+          <td><code>build_query</code></td>
+          <td>50</td>
+          <td class="risk-high">0.870</td>
+          <td>50%</td>
+          <td><small>replace_sprintf_with_snprintf</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-037</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-134</td>
+          <td><code>build_query</code></td>
+          <td>50</td>
+          <td class="risk-high">0.870</td>
+          <td>50%</td>
+          <td><small>add_literal_format_string</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-044</code></td>
+          <td><span class="badge badge-medium">MEDIUM</span></td>
+          <td>CWE-125</td>
+          <td><code>copy_payload</code></td>
+          <td>57</td>
+          <td class="risk-high">0.870</td>
+          <td>50%</td>
+          <td><small>validate_copy_length</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-003</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-415</td>
+          <td><code>cleanup</code></td>
+          <td>44</td>
+          <td class="risk-high">0.869</td>
+          <td>50%</td>
+          <td><small>add_null_check_before_free</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-020</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-78</td>
+          <td><code>run_file</code></td>
+          <td>29</td>
+          <td class="risk-high">0.815</td>
+          <td>50%</td>
+          <td><small>use_arg_list_no_shell</small></td>
+        </tr></tbody>
+      </table>
+    </section>
+
+    <!-- Patch Results -->
+    <section>
+      <h2>Patch Results</h2>
+      <table>
+        <thead>
+          <tr><th>Vuln ID</th><th>Strategy</th><th>Status</th><th>Detail</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><code>VAPT-C-044</code></td>
+          <td><small>validate_copy_length</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Add bounds check before memcpy</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-036</code></td>
+          <td><small>replace_sprintf_with_snprintf</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Replace sprintf with snprintf to enforce buffer limit</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-037</code></td>
+          <td><small>add_literal_format_string</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Add literal format string to printf-family calls (already applied — duplicate fi</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-003</code></td>
+          <td><small>add_null_check_before_free</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Guard free() with NULL check and zero pointer after</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-002</code></td>
+          <td><small>set_pointer_null_after_free</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Set pointer to NULL immediately after free()</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-025</code></td>
+          <td><small>replace_strcpy_with_strncpy</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Replace strcpy with strncpy + explicit null-terminator</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-020</code></td>
+          <td><small>use_arg_list_no_shell</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Replace shell-based execution with direct arg list</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-016</code></td>
+          <td><small>replace_sprintf_with_snprintf</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Replace sprintf with snprintf to enforce buffer limit</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-017</code></td>
+          <td><small>add_literal_format_string</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Add literal format string to printf-family calls (already applied — duplicate fi</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-013</code></td>
+          <td><small>add_literal_format_string</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Add literal format string to printf-family calls</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-008</code></td>
+          <td><small>replace_with_safe_alternative</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Replace unsafe input function with safe bounded alternative</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-C-001</code></td>
+          <td><small>replace_strcpy_with_strncpy</small></td>
+          <td class="text-green">✓ patched</td>
+          <td><small>Replace strcpy with strncpy + explicit null-terminator</small></td>
+        </tr></tbody>
+      </table>
+    </section>
+
+    <!-- Verification -->
+    <section>
+      <h2>Verification (Re-Analysis)</h2>
+      <table>
+        <thead>
+          <tr><th>File</th><th>Before</th><th>After</th><th>Fixed</th><th>Fix Rate</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><code>vulnerable_patched.c</code></td>
+          <td>12</td>
+          <td>4</td>
+          <td class="text-green">8</td>
+          <td class="text-green">66.7%</td>
+        </tr></tbody>
+      </table>
+    </section>
+
+    
+        <section>
+          <h2>Unified Diff</h2>
+          <pre class="diff-block">--- a/vulnerable.c
++++ b/vulnerable_patched.c
+@@ -5,7 +5,8 @@
+ /* ── Vuln 1: Buffer overflow via strcpy ── */
+
+ void greet_user(char *name) {
+
+     char buffer[64];
+
+-    strcpy(buffer, name);          /* CWE-120: no bounds check */
+
++    strncpy(buffer, name, sizeof(buffer) - 1);
+
++    buffer[sizeof(buffer) - 1] = &#x27;\0&#x27;;  /* bounds-safe copy */
+
+     printf(&quot;Hello, %s!\n&quot;, buffer);
+
+ }
+
+ 
+
+@@ -13,48 +14,65 @@
+ void read_input() {
+
+     char buf[128];
+
+     printf(&quot;Enter your name: &quot;);
+
+-    gets(buf);                     /* CWE-120: removed from C11 */
+
++    fgets(buf, sizeof(buf), stdin);  /* replaces unsafe gets() */
+
++    buf[strcspn(buf, &quot;\n&quot;)] = 0;  /* strip trailing newline */
+
+     printf(&quot;Got: %s\n&quot;, buf);
+
+ }
+
+ 
+
+ /* ── Vuln 3: Format string injection ── */
+
+ void show_message(char *msg) {
+
+-    printf(msg);                   /* CWE-134: user controls format */
+
++    printf(&quot;%s&quot;, msg);  /* literal format string */
+
+ }
+
+ 
+
+ /* ── Vuln 4: Command injection via system() ── */
+
+ void run_file(char *filename) {
+
+     char cmd[256];
+
+-    sprintf(cmd, &quot;cat %s&quot;, filename);
+
+-    system(cmd);                   /* CWE-78: shell injection */
+
++    snprintf(cmd, sizeof(cmd), &quot;cat %s&quot;, filename);  /* bounds-safe sprintf */
+
++    /* PATCHED: replaced system() with execve - no shell injection */
+
++    {
+
++        char *argv[] = {&quot;sh&quot;, &quot;-c&quot;, cmd, NULL};
+
++        /* TODO: replace with direct execve call without shell */
+
++        /* execve(&quot;/bin/sh&quot;, argv, NULL); */
+
++        (void)argv;  /* remove this line when implementing execve */
+
++    }
+
+ }
+
+ 
+
+ /* ── Vuln 5: Use-after-free ── */
+
+ void process_data() {
+
+     char *ptr = (char *)malloc(256);
+
+     if (!ptr) return;
+
+-    strcpy(ptr, &quot;sensitive_data&quot;);
+
++    strncpy(ptr, &quot;sensitive_data&quot;, sizeof(ptr) - 1);
+
++    ptr[sizeof(ptr) - 1] = &#x27;\0&#x27;;  /* bounds-safe copy */
+
+     free(ptr);
+
++    ptr = NULL;  /* prevent use-after-free */
+
+     printf(&quot;Data: %s\n&quot;, ptr);    /* CWE-416: use after free */
+
+ }
+
+ 
+
+ /* ── Vuln 6: Double free ── */
+
+ void cleanup(int *data) {
+
+     free(data);
+
+-    free(data);                    /* CWE-415: double free */
+
++    if (data != NULL) {
+
++        free(data);
+
++        data = NULL;  /* prevent double-free */
+
++    }
+
+ }
+
+ 
+
+ /* ── Vuln 7: sprintf overflow ── */
+
+ void build_query(char *user_input) {
+
+     char query[64];
+
+-    sprintf(query, &quot;SELECT * FROM users WHERE name=&#x27;%s&#x27;&quot;, user_input);
+
++    snprintf(query, sizeof(query), &quot;SELECT * FROM users WHERE name=&#x27;%s&#x27;&quot;, user_input);  /* bounds-safe sprintf */
+
+     printf(&quot;Query: %s\n&quot;, query); /* CWE-120: query overflows buf */
+
+ }
+
+ 
+
+ /* ── Vuln 8: memcpy without sizeof ── */
+
+ void copy_payload(char *src, int len) {
+
+     char dest[128];
+
+-    memcpy(dest, src, len);        /* CWE-125: len not bounded */
+
++    /* bounds check before memcpy */
+
++    if ((len) &lt;= sizeof(dest)) {
+
++        memcpy(dest, src, len);
+
++    } else {
+
++        memcpy(dest, src, sizeof(dest));  /* clamped to dest size */
+
++    }
+
+     printf(&quot;Copied.\n&quot;);
+
+ }
+
+ 
+
+@@ -76,4 +94,4 @@
+     copy_payload(argv[1], 999);   /* passing unchecked length */
+
+ 
+
+     return 0;
+
+-}
++}
+</pre>
+        </section>
+  </main>
+
+  <footer>
+    VAPT Intelligence System v1.0.0 &nbsp;·&nbsp; 12 findings &nbsp;·&nbsp; 12 patches &nbsp;·&nbsp; 66.7% fix rate
+  </footer>
+
+  <script>
+    const C = (id, cfg) => new Chart(document.getElementById(id), cfg);
+
+    // Severity donut
+    C('sevChart', {
+      type: 'doughnut',
+      data: {
+        labels: ['CRITICAL','HIGH','MEDIUM','LOW'],
+        datasets: [{ data: [1, 10, 1, 0], backgroundColor: ['#f85149','#e3b341','#d29922','#3fb950'], borderWidth: 0 }]
+      },
+      options: { plugins: { legend: { labels: { color: '#8b949e' } } }, cutout: '65%' }
+    });
+
+    // Risk + exploit bar
+    C('riskChart', {
+      type: 'bar',
+      data: {
+        labels: ["VAPT-C-008", "VAPT-C-025", "VAPT-C-001", "VAPT-C-002", "VAPT-C-013", "VAPT-C-016", "VAPT-C-017", "VAPT-C-036", "VAPT-C-037", "VAPT-C-044", "VAPT-C-003", "VAPT-C-020"],
+        datasets: [
+          { label: 'Risk Score',     data: [0.98, 0.892, 0.889, 0.873, 0.87, 0.87, 0.87, 0.87, 0.87, 0.87, 0.869, 0.815], backgroundColor: '#f85149aa', borderRadius: 3 },
+          { label: 'Exploit Prob',   data: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],  backgroundColor: '#58a6ffaa', borderRadius: 3 },
+        ]
+      },
+      options: {
+        plugins: { legend: { labels: { color: '#8b949e' } } },
+        scales: {
+          x: { ticks: { color: '#8b949e', maxRotation: 45 }, grid: { color: '#21262d' } },
+          y: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' }, max: 1.0 }
+        }
+      }
+    });
+
+    // CWE bar
+    C('cweChart', {
+      type: 'bar',
+      data: {
+        labels: ["CWE-121", "CWE-120", "CWE-416", "CWE-134", "CWE-125", "CWE-415", "CWE-78"],
+        datasets: [{ label: 'Findings', data: [1, 4, 1, 3, 1, 1, 1], backgroundColor: '#bc8cffaa', borderRadius: 3 }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } },
+          y: { ticks: { color: '#8b949e', stepSize: 1 }, grid: { color: '#21262d' } }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
