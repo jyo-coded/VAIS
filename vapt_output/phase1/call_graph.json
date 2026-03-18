@@ -1,163 +1,109 @@
 {
   "nodes": [
     {
-      "id": "greet_user",
-      "language": "c",
-      "file": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c",
-      "start_line": 6,
-      "end_line": 10,
+      "id": "runCommand",
+      "language": "go",
+      "file": "C:\\Users\\Lakshya\\VAIS\\vulnerability.go",
+      "start_line": 10,
+      "end_line": 12,
       "is_entry": false,
       "loop_depth": 0,
       "pointer_ops": 0,
       "extern_input": false
     },
     {
-      "id": "read_input",
-      "language": "c",
-      "file": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c",
-      "start_line": 13,
-      "end_line": 18,
+      "id": "runSystem",
+      "language": "go",
+      "file": "C:\\Users\\Lakshya\\VAIS\\vulnerability.go",
+      "start_line": 15,
+      "end_line": 17,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "weakRandom",
+      "language": "go",
+      "file": "C:\\Users\\Lakshya\\VAIS\\vulnerability.go",
+      "start_line": 20,
+      "end_line": 22,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "writeFile",
+      "language": "go",
+      "file": "C:\\Users\\Lakshya\\VAIS\\vulnerability.go",
+      "start_line": 25,
+      "end_line": 27,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "readInput",
+      "language": "go",
+      "file": "C:\\Users\\Lakshya\\VAIS\\vulnerability.go",
+      "start_line": 30,
+      "end_line": 33,
       "is_entry": false,
       "loop_depth": 0,
       "pointer_ops": 0,
       "extern_input": true
-    },
-    {
-      "id": "show_message",
-      "language": "c",
-      "file": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c",
-      "start_line": 21,
-      "end_line": 23,
-      "is_entry": false,
-      "loop_depth": 0,
-      "pointer_ops": 0,
-      "extern_input": false
-    },
-    {
-      "id": "run_file",
-      "language": "c",
-      "file": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c",
-      "start_line": 26,
-      "end_line": 30,
-      "is_entry": false,
-      "loop_depth": 0,
-      "pointer_ops": 0,
-      "extern_input": false
-    },
-    {
-      "id": "process_data",
-      "language": "c",
-      "file": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c",
-      "start_line": 33,
-      "end_line": 39,
-      "is_entry": false,
-      "loop_depth": 0,
-      "pointer_ops": 0,
-      "extern_input": false
-    },
-    {
-      "id": "cleanup",
-      "language": "c",
-      "file": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c",
-      "start_line": 42,
-      "end_line": 45,
-      "is_entry": false,
-      "loop_depth": 0,
-      "pointer_ops": 0,
-      "extern_input": false
-    },
-    {
-      "id": "build_query",
-      "language": "c",
-      "file": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c",
-      "start_line": 48,
-      "end_line": 52,
-      "is_entry": false,
-      "loop_depth": 0,
-      "pointer_ops": 0,
-      "extern_input": false
-    },
-    {
-      "id": "copy_payload",
-      "language": "c",
-      "file": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c",
-      "start_line": 55,
-      "end_line": 59,
-      "is_entry": false,
-      "loop_depth": 0,
-      "pointer_ops": 0,
-      "extern_input": false
     },
     {
       "id": "main",
-      "language": "c",
-      "file": "C:\\ImpProjects\\sysml\\vapt_system\\tests\\samples\\vulnerable.c",
-      "start_line": 61,
-      "end_line": 79,
+      "language": "go",
+      "file": "C:\\Users\\Lakshya\\VAIS\\vulnerability.go",
+      "start_line": 35,
+      "end_line": 41,
       "is_entry": true,
       "loop_depth": 0,
-      "pointer_ops": 6,
-      "extern_input": true
+      "pointer_ops": 0,
+      "extern_input": false
     },
     {
-      "id": "strcpy",
-      "language": "c",
+      "id": "exec.Command(\"bash\", \"-c\", input).Run",
+      "language": "go",
       "file": "external",
       "is_entry": false,
       "external": true
     },
     {
-      "id": "printf",
-      "language": "c",
+      "id": "exec.Command",
+      "language": "go",
       "file": "external",
       "is_entry": false,
       "external": true
     },
     {
-      "id": "gets",
-      "language": "c",
+      "id": "exec.Command(\"sh\", \"-c\", cmd).Run",
+      "language": "go",
       "file": "external",
       "is_entry": false,
       "external": true
     },
     {
-      "id": "sprintf",
-      "language": "c",
+      "id": "os.WriteFile",
+      "language": "go",
       "file": "external",
       "is_entry": false,
       "external": true
     },
     {
-      "id": "system",
-      "language": "c",
+      "id": "fmt.Scanf",
+      "language": "go",
       "file": "external",
       "is_entry": false,
       "external": true
     },
     {
-      "id": "malloc",
-      "language": "c",
-      "file": "external",
-      "is_entry": false,
-      "external": true
-    },
-    {
-      "id": "free",
-      "language": "c",
-      "file": "external",
-      "is_entry": false,
-      "external": true
-    },
-    {
-      "id": "memcpy",
-      "language": "c",
-      "file": "external",
-      "is_entry": false,
-      "external": true
-    },
-    {
-      "id": "fprintf",
-      "language": "c",
+      "id": "fmt.Println",
+      "language": "go",
       "file": "external",
       "is_entry": false,
       "external": true
@@ -165,137 +111,72 @@
   ],
   "edges": [
     {
-      "from": "greet_user",
-      "to": "strcpy",
-      "line": 8
+      "from": "runCommand",
+      "to": "exec.Command(\"bash\", \"-c\", input).Run",
+      "line": 11
     },
     {
-      "from": "greet_user",
-      "to": "printf",
-      "line": 9
+      "from": "runCommand",
+      "to": "exec.Command",
+      "line": 11
     },
     {
-      "from": "read_input",
-      "to": "printf",
-      "line": 17
-    },
-    {
-      "from": "read_input",
-      "to": "gets",
+      "from": "runSystem",
+      "to": "exec.Command(\"sh\", \"-c\", cmd).Run",
       "line": 16
     },
     {
-      "from": "show_message",
-      "to": "printf",
-      "line": 22
+      "from": "runSystem",
+      "to": "exec.Command",
+      "line": 16
     },
     {
-      "from": "run_file",
-      "to": "sprintf",
-      "line": 28
+      "from": "writeFile",
+      "to": "os.WriteFile",
+      "line": 26
     },
     {
-      "from": "run_file",
-      "to": "system",
-      "line": 29
+      "from": "readInput",
+      "to": "fmt.Scanf",
+      "line": 32
     },
     {
-      "from": "process_data",
-      "to": "malloc",
-      "line": 34
-    },
-    {
-      "from": "process_data",
-      "to": "strcpy",
+      "from": "main",
+      "to": "runCommand",
       "line": 36
     },
     {
-      "from": "process_data",
-      "to": "free",
+      "from": "main",
+      "to": "runSystem",
       "line": 37
     },
     {
-      "from": "process_data",
-      "to": "printf",
+      "from": "main",
+      "to": "writeFile",
       "line": 38
     },
     {
-      "from": "cleanup",
-      "to": "free",
-      "line": 44
-    },
-    {
-      "from": "build_query",
-      "to": "sprintf",
-      "line": 50
-    },
-    {
-      "from": "build_query",
-      "to": "printf",
-      "line": 51
-    },
-    {
-      "from": "copy_payload",
-      "to": "memcpy",
-      "line": 57
-    },
-    {
-      "from": "copy_payload",
-      "to": "printf",
-      "line": 58
+      "from": "main",
+      "to": "readInput",
+      "line": 39
     },
     {
       "from": "main",
-      "to": "fprintf",
-      "line": 63
+      "to": "fmt.Println",
+      "line": 40
     },
     {
       "from": "main",
-      "to": "greet_user",
-      "line": 67
-    },
-    {
-      "from": "main",
-      "to": "show_message",
-      "line": 68
-    },
-    {
-      "from": "main",
-      "to": "run_file",
-      "line": 69
-    },
-    {
-      "from": "main",
-      "to": "read_input",
-      "line": 70
-    },
-    {
-      "from": "main",
-      "to": "malloc",
-      "line": 72
-    },
-    {
-      "from": "main",
-      "to": "cleanup",
-      "line": 73
-    },
-    {
-      "from": "main",
-      "to": "build_query",
-      "line": 75
-    },
-    {
-      "from": "main",
-      "to": "copy_payload",
-      "line": 76
+      "to": "weakRandom",
+      "line": 40
     }
   ],
   "entry_points": [
     "main"
   ],
   "stats": {
-    "total_nodes": 18,
-    "total_edges": 25,
+    "total_nodes": 12,
+    "total_edges": 12,
     "is_dag": true
   }
 }

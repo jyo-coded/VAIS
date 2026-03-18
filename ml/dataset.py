@@ -26,8 +26,8 @@ from rules.vuln_object import Severity
 
 # ─── Label thresholds ────────────────────────────────────────────────────────
 
-EXPLOIT_THRESHOLD_HIGH  = 0.70   # above → exploitable (label=1)
-EXPLOIT_THRESHOLD_LOW   = 0.30   # below → benign (label=0)
+EXPLOIT_THRESHOLD_HIGH  = 0.55   # above → exploitable (label=1)
+EXPLOIT_THRESHOLD_LOW   = 0.45   # below → benign (label=0)
 NOISE_RATE              = 0.05   # 5% label flip for regularization
 AUGMENTATION_FACTOR     = 4      # synthetic samples per real sample
 AUGMENTATION_NOISE_STD  = 0.05   # Gaussian noise std for augmentation
@@ -120,6 +120,11 @@ class DatasetBuilder:
             y_clf = (composite_risk >= 0.5).astype(int)
             y_reg = X[:, SEVERITY_FEATURE_IDX].copy()
 
+        # FIX: ensure both classes exist — if only one class, force-flip half
+        if len(np.unique(y_clf)) < 2 and len(y_clf) >= 2:
+            half = len(y_clf) // 2
+            y_clf[:half] = 1 - y_clf[:half]
+
         # ── Step 3: Augment ───────────────────────────────────────────────
         if augment and len(X_labeled) > 0:
             X_aug, y_clf_aug, y_reg_aug = self._augment(X_labeled, y_clf, y_reg)
@@ -177,10 +182,12 @@ class DatasetBuilder:
         y_clf     = high_mask[keep_mask].astype(np.int32)
         y_reg     = X_kept[:, SEVERITY_FEATURE_IDX].copy()
 
-        # Add 5% label noise for regularization
-        n_flip = max(1, int(len(y_clf) * NOISE_RATE))
-        flip_idx = self.rng.choice(len(y_clf), size=n_flip, replace=False)
-        y_clf[flip_idx] = 1 - y_clf[flip_idx]
+        # FIX: Add 5% label noise only if there are enough samples
+        if len(y_clf) > 0:
+            n_flip = int(len(y_clf) * NOISE_RATE)
+            if n_flip > 0 and len(y_clf) >= n_flip:
+                flip_idx = self.rng.choice(len(y_clf), size=n_flip, replace=False)
+                y_clf[flip_idx] = 1 - y_clf[flip_idx]
 
         return X_kept, y_clf, y_reg
 

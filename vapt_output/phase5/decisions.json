@@ -1,53 +1,13 @@
 {
-  "total": 12,
-  "agent_mode": "llm:codellama",
+  "total": 2,
+  "agent_mode": "fallback:rule_based",
   "decisions": [
     {
-      "vuln_id": "VAPT-C-008",
-      "strategy": "replace_with_safe_alternative"
+      "vuln_id": "VAPT-GO-001",
+      "strategy": "use_arg_list_no_shell"
     },
     {
-      "vuln_id": "VAPT-C-025",
-      "strategy": "replace_strcpy_with_strncpy"
-    },
-    {
-      "vuln_id": "VAPT-C-001",
-      "strategy": "replace_strcpy_with_strncpy"
-    },
-    {
-      "vuln_id": "VAPT-C-002",
-      "strategy": "set_pointer_null_after_free"
-    },
-    {
-      "vuln_id": "VAPT-C-013",
-      "strategy": "add_literal_format_string"
-    },
-    {
-      "vuln_id": "VAPT-C-016",
-      "strategy": "replace_sprintf_with_snprintf"
-    },
-    {
-      "vuln_id": "VAPT-C-017",
-      "strategy": "add_literal_format_string"
-    },
-    {
-      "vuln_id": "VAPT-C-036",
-      "strategy": "replace_sprintf_with_snprintf"
-    },
-    {
-      "vuln_id": "VAPT-C-037",
-      "strategy": "add_literal_format_string"
-    },
-    {
-      "vuln_id": "VAPT-C-044",
-      "strategy": "validate_copy_length"
-    },
-    {
-      "vuln_id": "VAPT-C-003",
-      "strategy": "add_null_check_before_free"
-    },
-    {
-      "vuln_id": "VAPT-C-020",
+      "vuln_id": "VAPT-GO-002",
       "strategy": "use_arg_list_no_shell"
     }
   ]

@@ -3,12 +3,12 @@
     "accuracy": 0.5,
     "f1_score": 0.0,
     "auc_roc": 0.5,
-    "train_time": 0.198
+    "train_time": 0.588
   },
   "regressor": {
-    "mae": 0.0163,
-    "r2_score": 0.972,
-    "train_time": 0.359
+    "mae": 0.0,
+    "r2_score": 1.0,
+    "train_time": 0.324
   },
   "feature_importances": {
     "cwe_cvss_score": 0.0,
@@ -24,7 +24,7 @@
     "loop_depth": 0.0,
     "language_risk": 0.0
   },
-  "total_time": 0.559,
+  "total_time": 0.912,
   "n_train": 8,
   "n_val": 2
 }

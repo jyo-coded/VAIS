@@ -1,5 +1,5 @@
 {
-  "n_vulns": 12,
+  "n_vulns": 2,
   "n_features": 12,
   "feature_names": [
     "cwe_cvss_score",
@@ -18,79 +18,11 @@
   "nvd_online": false,
   "features": [
     {
-      "vuln_id": "VAPT-C-001",
+      "vuln_id": "VAPT-GO-001",
       "features": {
-        "cwe_cvss_score": 0.75,
+        "cwe_cvss_score": 0.98,
         "severity_score": 0.8,
-        "confidence": 0.9,
-        "reachable_from_entry": 1.0,
-        "has_extern_input": 0.0,
-        "call_depth": 0.1,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.1333,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-002",
-      "features": {
-        "cwe_cvss_score": 0.81,
-        "severity_score": 0.8,
-        "confidence": 0.7,
-        "reachable_from_entry": 0.0,
-        "has_extern_input": 0.0,
-        "call_depth": 0.0,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.2667,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-003",
-      "features": {
-        "cwe_cvss_score": 0.81,
-        "severity_score": 0.8,
-        "confidence": 0.75,
-        "reachable_from_entry": 1.0,
-        "has_extern_input": 0.0,
-        "call_depth": 0.1,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.1333,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-008",
-      "features": {
-        "cwe_cvss_score": 0.78,
-        "severity_score": 1.0,
-        "confidence": 0.98,
-        "reachable_from_entry": 1.0,
-        "has_extern_input": 1.0,
-        "call_depth": 0.1,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.2,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-013",
-      "features": {
-        "cwe_cvss_score": 0.75,
-        "severity_score": 0.8,
-        "confidence": 0.8,
+        "confidence": 0.85,
         "reachable_from_entry": 1.0,
         "has_extern_input": 0.0,
         "call_depth": 0.1,
@@ -99,126 +31,24 @@
         "unsafe_api_count": 0.0667,
         "alloc_without_free": 0.0,
         "loop_depth": 0.0,
-        "language_risk": 1.0
+        "language_risk": 0.6
       }
     },
     {
-      "vuln_id": "VAPT-C-016",
-      "features": {
-        "cwe_cvss_score": 0.75,
-        "severity_score": 0.8,
-        "confidence": 0.85,
-        "reachable_from_entry": 1.0,
-        "has_extern_input": 0.0,
-        "call_depth": 0.1,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.1333,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-017",
-      "features": {
-        "cwe_cvss_score": 0.75,
-        "severity_score": 0.8,
-        "confidence": 0.8,
-        "reachable_from_entry": 1.0,
-        "has_extern_input": 0.0,
-        "call_depth": 0.1,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.1333,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-020",
+      "vuln_id": "VAPT-GO-002",
       "features": {
         "cwe_cvss_score": 0.98,
         "severity_score": 0.8,
-        "confidence": 0.88,
-        "reachable_from_entry": 1.0,
-        "has_extern_input": 0.0,
-        "call_depth": 0.1,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.1333,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-025",
-      "features": {
-        "cwe_cvss_score": 0.75,
-        "severity_score": 0.8,
-        "confidence": 0.9,
-        "reachable_from_entry": 0.0,
-        "has_extern_input": 0.0,
-        "call_depth": 0.0,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.2667,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-036",
-      "features": {
-        "cwe_cvss_score": 0.75,
-        "severity_score": 0.8,
         "confidence": 0.85,
         "reachable_from_entry": 1.0,
         "has_extern_input": 0.0,
         "call_depth": 0.1,
         "in_loop": 0.0,
         "pointer_ops": 0.0,
-        "unsafe_api_count": 0.1333,
+        "unsafe_api_count": 0.0667,
         "alloc_without_free": 0.0,
         "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-037",
-      "features": {
-        "cwe_cvss_score": 0.75,
-        "severity_score": 0.8,
-        "confidence": 0.8,
-        "reachable_from_entry": 1.0,
-        "has_extern_input": 0.0,
-        "call_depth": 0.1,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.1333,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
-      }
-    },
-    {
-      "vuln_id": "VAPT-C-044",
-      "features": {
-        "cwe_cvss_score": 0.65,
-        "severity_score": 0.5,
-        "confidence": 0.65,
-        "reachable_from_entry": 1.0,
-        "has_extern_input": 0.0,
-        "call_depth": 0.1,
-        "in_loop": 0.0,
-        "pointer_ops": 0.0,
-        "unsafe_api_count": 0.1333,
-        "alloc_without_free": 0.0,
-        "loop_depth": 0.0,
-        "language_risk": 1.0
+        "language_risk": 0.6
       }
     }
   ]

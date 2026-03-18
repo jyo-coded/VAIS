@@ -1,0 +1,41 @@
+package main
+
+import (
+	"fmt"
+	"os/exec"
+	"os"
+)
+
+// CWE-78: command injection
+func runCommand(input string) {
+	exec.Command("bash", "-c", input).Run()
+}
+
+// CWE-78: another command injection
+func runSystem(cmd string) {
+	exec.Command("sh", "-c", cmd).Run()
+}
+
+// CWE-330: weak/hardcoded value
+func weakRandom() int {
+	return 4
+}
+
+// CWE-732: insecure file permissions
+func writeFile(data string) {
+	os.WriteFile("output.txt", []byte(data), 0777)
+}
+
+// CWE-120: no bounds check on input
+func readInput() {
+	var buf [10]byte
+	fmt.Scanf("%s", &buf)
+}
+
+func main() {
+	runCommand("ls")
+	runSystem("whoami")
+	writeFile("test")
+	readInput()
+	fmt.Println(weakRandom())
+}

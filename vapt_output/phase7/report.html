@@ -62,20 +62,20 @@
 <body>
   <header>
     <h1>⚡ VAPT Intelligence System</h1>
-    <p>Agent-Orchestrated Hybrid Static Vulnerability Assessment &nbsp;|&nbsp; Generated: 2026-03-13 22:18:22 &nbsp;|&nbsp; Agent: llm:codellama</p>
+    <p>Agent-Orchestrated Hybrid Static Vulnerability Assessment &nbsp;|&nbsp; Generated: 2026-03-18 13:41:41 &nbsp;|&nbsp; Agent: fallback:rule_based</p>
   </header>
 
   <main>
     <!-- Summary Cards -->
     <div class="cards">
-      <div class="card"><div class="num red">1</div><div class="label">CRITICAL</div></div>
-      <div class="card"><div class="num orange">10</div><div class="label">HIGH</div></div>
-      <div class="card"><div class="num" style="color:var(--orange)">1</div><div class="label">MEDIUM</div></div>
+      <div class="card"><div class="num red">0</div><div class="label">CRITICAL</div></div>
+      <div class="card"><div class="num orange">2</div><div class="label">HIGH</div></div>
+      <div class="card"><div class="num" style="color:var(--orange)">0</div><div class="label">MEDIUM</div></div>
       <div class="card"><div class="num cyan">0</div><div class="label">LOW</div></div>
-      <div class="card"><div class="num purple">12</div><div class="label">TOTAL FINDINGS</div></div>
-      <div class="card"><div class="num green">12</div><div class="label">PATCHES APPLIED</div></div>
-      <div class="card"><div class="num green">67%</div><div class="label">FIX RATE</div></div>
-      <div class="card"><div class="num cyan">12</div><div class="label">AGENT DECISIONS</div></div>
+      <div class="card"><div class="num purple">2</div><div class="label">TOTAL FINDINGS</div></div>
+      <div class="card"><div class="num green">0</div><div class="label">PATCHES APPLIED</div></div>
+      <div class="card"><div class="num orange">0%</div><div class="label">FIX RATE</div></div>
+      <div class="card"><div class="num cyan">2</div><div class="label">AGENT DECISIONS</div></div>
     </div>
 
     <!-- Charts -->
@@ -110,122 +110,22 @@
         </thead>
         <tbody>
         <tr>
-          <td><code>VAPT-C-008</code></td>
-          <td><span class="badge badge-critical">CRITICAL</span></td>
-          <td>CWE-121</td>
-          <td><code>read_input</code></td>
-          <td>16</td>
-          <td class="risk-high">0.980</td>
-          <td>50%</td>
-          <td><small>replace_with_safe_alternative</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-025</code></td>
-          <td><span class="badge badge-high">HIGH</span></td>
-          <td>CWE-120</td>
-          <td><code>process_data</code></td>
-          <td>36</td>
-          <td class="risk-high">0.892</td>
-          <td>50%</td>
-          <td><small>replace_strcpy_with_strncpy</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-001</code></td>
-          <td><span class="badge badge-high">HIGH</span></td>
-          <td>CWE-120</td>
-          <td><code>greet_user</code></td>
-          <td>8</td>
-          <td class="risk-high">0.889</td>
-          <td>50%</td>
-          <td><small>replace_strcpy_with_strncpy</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-002</code></td>
-          <td><span class="badge badge-high">HIGH</span></td>
-          <td>CWE-416</td>
-          <td><code>process_data</code></td>
-          <td>38</td>
-          <td class="risk-high">0.873</td>
-          <td>50%</td>
-          <td><small>set_pointer_null_after_free</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-013</code></td>
-          <td><span class="badge badge-high">HIGH</span></td>
-          <td>CWE-134</td>
-          <td><code>show_message</code></td>
-          <td>22</td>
-          <td class="risk-high">0.870</td>
-          <td>50%</td>
-          <td><small>add_literal_format_string</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-016</code></td>
-          <td><span class="badge badge-high">HIGH</span></td>
-          <td>CWE-120</td>
-          <td><code>run_file</code></td>
-          <td>28</td>
-          <td class="risk-high">0.870</td>
-          <td>50%</td>
-          <td><small>replace_sprintf_with_snprintf</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-017</code></td>
-          <td><span class="badge badge-high">HIGH</span></td>
-          <td>CWE-134</td>
-          <td><code>run_file</code></td>
-          <td>28</td>
-          <td class="risk-high">0.870</td>
-          <td>50%</td>
-          <td><small>add_literal_format_string</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-036</code></td>
-          <td><span class="badge badge-high">HIGH</span></td>
-          <td>CWE-120</td>
-          <td><code>build_query</code></td>
-          <td>50</td>
-          <td class="risk-high">0.870</td>
-          <td>50%</td>
-          <td><small>replace_sprintf_with_snprintf</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-037</code></td>
-          <td><span class="badge badge-high">HIGH</span></td>
-          <td>CWE-134</td>
-          <td><code>build_query</code></td>
-          <td>50</td>
-          <td class="risk-high">0.870</td>
-          <td>50%</td>
-          <td><small>add_literal_format_string</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-044</code></td>
-          <td><span class="badge badge-medium">MEDIUM</span></td>
-          <td>CWE-125</td>
-          <td><code>copy_payload</code></td>
-          <td>57</td>
-          <td class="risk-high">0.870</td>
-          <td>50%</td>
-          <td><small>validate_copy_length</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-003</code></td>
-          <td><span class="badge badge-high">HIGH</span></td>
-          <td>CWE-415</td>
-          <td><code>cleanup</code></td>
-          <td>44</td>
-          <td class="risk-high">0.869</td>
-          <td>50%</td>
-          <td><small>add_null_check_before_free</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-020</code></td>
+          <td><code>VAPT-GO-001</code></td>
           <td><span class="badge badge-high">HIGH</span></td>
           <td>CWE-78</td>
-          <td><code>run_file</code></td>
-          <td>29</td>
-          <td class="risk-high">0.815</td>
+          <td><code>runCommand</code></td>
+          <td>11</td>
+          <td class="risk-high">0.800</td>
+          <td>50%</td>
+          <td><small>use_arg_list_no_shell</small></td>
+        </tr>
+        <tr>
+          <td><code>VAPT-GO-002</code></td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>CWE-78</td>
+          <td><code>runSystem</code></td>
+          <td>16</td>
+          <td class="risk-high">0.800</td>
           <td>50%</td>
           <td><small>use_arg_list_no_shell</small></td>
         </tr></tbody>
@@ -241,76 +141,16 @@
         </thead>
         <tbody>
         <tr>
-          <td><code>VAPT-C-044</code></td>
-          <td><small>validate_copy_length</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Add bounds check before memcpy</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-036</code></td>
-          <td><small>replace_sprintf_with_snprintf</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Replace sprintf with snprintf to enforce buffer limit</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-037</code></td>
-          <td><small>add_literal_format_string</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Add literal format string to printf-family calls (already applied — duplicate fi</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-003</code></td>
-          <td><small>add_null_check_before_free</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Guard free() with NULL check and zero pointer after</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-002</code></td>
-          <td><small>set_pointer_null_after_free</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Set pointer to NULL immediately after free()</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-025</code></td>
-          <td><small>replace_strcpy_with_strncpy</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Replace strcpy with strncpy + explicit null-terminator</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-020</code></td>
+          <td><code>VAPT-GO-002</code></td>
           <td><small>use_arg_list_no_shell</small></td>
-          <td class="text-green">✓ patched</td>
+          <td class="text-red">✗ failed</td>
           <td><small>Replace shell-based execution with direct arg list</small></td>
         </tr>
         <tr>
-          <td><code>VAPT-C-016</code></td>
-          <td><small>replace_sprintf_with_snprintf</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Replace sprintf with snprintf to enforce buffer limit</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-017</code></td>
-          <td><small>add_literal_format_string</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Add literal format string to printf-family calls (already applied — duplicate fi</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-013</code></td>
-          <td><small>add_literal_format_string</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Add literal format string to printf-family calls</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-008</code></td>
-          <td><small>replace_with_safe_alternative</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Replace unsafe input function with safe bounded alternative</small></td>
-        </tr>
-        <tr>
-          <td><code>VAPT-C-001</code></td>
-          <td><small>replace_strcpy_with_strncpy</small></td>
-          <td class="text-green">✓ patched</td>
-          <td><small>Replace strcpy with strncpy + explicit null-terminator</small></td>
+          <td><code>VAPT-GO-001</code></td>
+          <td><small>use_arg_list_no_shell</small></td>
+          <td class="text-red">✗ failed</td>
+          <td><small>Replace shell-based execution with direct arg list</small></td>
         </tr></tbody>
       </table>
     </section>
@@ -324,11 +164,11 @@
         </thead>
         <tbody>
         <tr>
-          <td><code>vulnerable_patched.c</code></td>
-          <td>12</td>
-          <td>4</td>
-          <td class="text-green">8</td>
-          <td class="text-green">66.7%</td>
+          <td><code>vulnerability_patched.go</code></td>
+          <td>2</td>
+          <td>2</td>
+          <td class="text-green">0</td>
+          <td class="text-yellow">0.0%</td>
         </tr></tbody>
       </table>
     </section>
@@ -336,180 +176,14 @@
     
         <section>
           <h2>Unified Diff</h2>
-          <pre class="diff-block">--- a/vulnerable.c
-+++ b/vulnerable_patched.c
-@@ -5,7 +5,8 @@
- /* ── Vuln 1: Buffer overflow via strcpy ── */
+          <pre class="diff-block">--- a/vulnerability.go
++++ b/vulnerability_patched.go
+@@ -38,4 +38,4 @@
+ 	writeFile(&quot;test&quot;)
 
- void greet_user(char *name) {
+ 	readInput()
 
-     char buffer[64];
-
--    strcpy(buffer, name);          /* CWE-120: no bounds check */
-
-+    strncpy(buffer, name, sizeof(buffer) - 1);
-
-+    buffer[sizeof(buffer) - 1] = &#x27;\0&#x27;;  /* bounds-safe copy */
-
-     printf(&quot;Hello, %s!\n&quot;, buffer);
-
- }
-
- 
-
-@@ -13,48 +14,65 @@
- void read_input() {
-
-     char buf[128];
-
-     printf(&quot;Enter your name: &quot;);
-
--    gets(buf);                     /* CWE-120: removed from C11 */
-
-+    fgets(buf, sizeof(buf), stdin);  /* replaces unsafe gets() */
-
-+    buf[strcspn(buf, &quot;\n&quot;)] = 0;  /* strip trailing newline */
-
-     printf(&quot;Got: %s\n&quot;, buf);
-
- }
-
- 
-
- /* ── Vuln 3: Format string injection ── */
-
- void show_message(char *msg) {
-
--    printf(msg);                   /* CWE-134: user controls format */
-
-+    printf(&quot;%s&quot;, msg);  /* literal format string */
-
- }
-
- 
-
- /* ── Vuln 4: Command injection via system() ── */
-
- void run_file(char *filename) {
-
-     char cmd[256];
-
--    sprintf(cmd, &quot;cat %s&quot;, filename);
-
--    system(cmd);                   /* CWE-78: shell injection */
-
-+    snprintf(cmd, sizeof(cmd), &quot;cat %s&quot;, filename);  /* bounds-safe sprintf */
-
-+    /* PATCHED: replaced system() with execve - no shell injection */
-
-+    {
-
-+        char *argv[] = {&quot;sh&quot;, &quot;-c&quot;, cmd, NULL};
-
-+        /* TODO: replace with direct execve call without shell */
-
-+        /* execve(&quot;/bin/sh&quot;, argv, NULL); */
-
-+        (void)argv;  /* remove this line when implementing execve */
-
-+    }
-
- }
-
- 
-
- /* ── Vuln 5: Use-after-free ── */
-
- void process_data() {
-
-     char *ptr = (char *)malloc(256);
-
-     if (!ptr) return;
-
--    strcpy(ptr, &quot;sensitive_data&quot;);
-
-+    strncpy(ptr, &quot;sensitive_data&quot;, sizeof(ptr) - 1);
-
-+    ptr[sizeof(ptr) - 1] = &#x27;\0&#x27;;  /* bounds-safe copy */
-
-     free(ptr);
-
-+    ptr = NULL;  /* prevent use-after-free */
-
-     printf(&quot;Data: %s\n&quot;, ptr);    /* CWE-416: use after free */
-
- }
-
- 
-
- /* ── Vuln 6: Double free ── */
-
- void cleanup(int *data) {
-
-     free(data);
-
--    free(data);                    /* CWE-415: double free */
-
-+    if (data != NULL) {
-
-+        free(data);
-
-+        data = NULL;  /* prevent double-free */
-
-+    }
-
- }
-
- 
-
- /* ── Vuln 7: sprintf overflow ── */
-
- void build_query(char *user_input) {
-
-     char query[64];
-
--    sprintf(query, &quot;SELECT * FROM users WHERE name=&#x27;%s&#x27;&quot;, user_input);
-
-+    snprintf(query, sizeof(query), &quot;SELECT * FROM users WHERE name=&#x27;%s&#x27;&quot;, user_input);  /* bounds-safe sprintf */
-
-     printf(&quot;Query: %s\n&quot;, query); /* CWE-120: query overflows buf */
-
- }
-
- 
-
- /* ── Vuln 8: memcpy without sizeof ── */
-
- void copy_payload(char *src, int len) {
-
-     char dest[128];
-
--    memcpy(dest, src, len);        /* CWE-125: len not bounded */
-
-+    /* bounds check before memcpy */
-
-+    if ((len) &lt;= sizeof(dest)) {
-
-+        memcpy(dest, src, len);
-
-+    } else {
-
-+        memcpy(dest, src, sizeof(dest));  /* clamped to dest size */
-
-+    }
-
-     printf(&quot;Copied.\n&quot;);
-
- }
-
- 
-
-@@ -76,4 +94,4 @@
-     copy_payload(argv[1], 999);   /* passing unchecked length */
-
- 
-
-     return 0;
+ 	fmt.Println(weakRandom())
 
 -}
 +}
@@ -518,7 +192,7 @@
   </main>
 
   <footer>
-    VAPT Intelligence System v1.0.0 &nbsp;·&nbsp; 12 findings &nbsp;·&nbsp; 12 patches &nbsp;·&nbsp; 66.7% fix rate
+    VAPT Intelligence System v1.0.0 &nbsp;·&nbsp; 2 findings &nbsp;·&nbsp; 0 patches &nbsp;·&nbsp; 0.0% fix rate
   </footer>
 
   <script>
@@ -529,7 +203,7 @@
       type: 'doughnut',
       data: {
         labels: ['CRITICAL','HIGH','MEDIUM','LOW'],
-        datasets: [{ data: [1, 10, 1, 0], backgroundColor: ['#f85149','#e3b341','#d29922','#3fb950'], borderWidth: 0 }]
+        datasets: [{ data: [0, 2, 0, 0], backgroundColor: ['#f85149','#e3b341','#d29922','#3fb950'], borderWidth: 0 }]
       },
       options: { plugins: { legend: { labels: { color: '#8b949e' } } }, cutout: '65%' }
     });
@@ -538,10 +212,10 @@
     C('riskChart', {
       type: 'bar',
       data: {
-        labels: ["VAPT-C-008", "VAPT-C-025", "VAPT-C-001", "VAPT-C-002", "VAPT-C-013", "VAPT-C-016", "VAPT-C-017", "VAPT-C-036", "VAPT-C-037", "VAPT-C-044", "VAPT-C-003", "VAPT-C-020"],
+        labels: ["VAPT-GO-001", "VAPT-GO-002"],
         datasets: [
-          { label: 'Risk Score',     data: [0.98, 0.892, 0.889, 0.873, 0.87, 0.87, 0.87, 0.87, 0.87, 0.87, 0.869, 0.815], backgroundColor: '#f85149aa', borderRadius: 3 },
-          { label: 'Exploit Prob',   data: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],  backgroundColor: '#58a6ffaa', borderRadius: 3 },
+          { label: 'Risk Score',     data: [0.8, 0.8], backgroundColor: '#f85149aa', borderRadius: 3 },
+          { label: 'Exploit Prob',   data: [0.5, 0.5],  backgroundColor: '#58a6ffaa', borderRadius: 3 },
         ]
       },
       options: {
@@ -557,8 +231,8 @@
     C('cweChart', {
       type: 'bar',
       data: {
-        labels: ["CWE-121", "CWE-120", "CWE-416", "CWE-134", "CWE-125", "CWE-415", "CWE-78"],
-        datasets: [{ label: 'Findings', data: [1, 4, 1, 3, 1, 1, 1], backgroundColor: '#bc8cffaa', borderRadius: 3 }]
+        labels: ["CWE-78"],
+        datasets: [{ label: 'Findings', data: [2], backgroundColor: '#bc8cffaa', borderRadius: 3 }]
       },
       options: {
         plugins: { legend: { display: false } },
