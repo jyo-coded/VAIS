@@ -30,6 +30,8 @@ from rules.base_rule import BaseRule
 from rules.c_rules import C_RULES
 from rules.python_rules import PYTHON_RULES
 from rules.go_rules import GO_RULES
+from rules.java_rules import JAVA_RULES
+from rules.cpp_rules import CPP_RULES
 
 console = Console()
 
@@ -37,6 +39,8 @@ console = Console()
 
 RULES_BY_LANGUAGE: dict[Language, list[BaseRule]] = {
     Language.C:      C_RULES,
+    Language.CPP:    CPP_RULES,
+    Language.JAVA:   JAVA_RULES,
     Language.PYTHON: PYTHON_RULES,
     Language.GO:     GO_RULES,
 }

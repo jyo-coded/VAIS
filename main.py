@@ -35,7 +35,7 @@ BANNER = """
 
 VERSION  = "1.0.0"
 TAGLINE  = "Agent-Orchestrated Hybrid Static Vulnerability Assessment System"
-LANGS    = "C · Python · Go"
+LANGS    = "C · C++ · Java · Python · Go"
 
 
 def print_banner() -> None:
@@ -87,7 +87,7 @@ Examples:
         "--lang",
         type=str,
         default="auto",
-        choices=["auto", "c", "python", "go"],
+        choices=["auto", "c", "cpp", "java", "python", "go"],
         help="Language to analyze. 'auto' detects from file extensions (default: auto)",
     )
 
@@ -152,6 +152,13 @@ Examples:
 
 def cmd_scan(args: argparse.Namespace) -> int:
     """Handle the 'vapt scan' command."""
+
+    target_path = Path(args.path)
+    if not target_path.exists():
+        fallback_path = Path("tests/samples") / target_path.name
+        if fallback_path.exists():
+            args.path = str(fallback_path)
+            console.print(f"[dim]Auto-resolved path to: {args.path}[/dim]")
 
     verbose = args.verbose and not args.quiet
     output_dir = Path(args.output)
@@ -267,6 +274,8 @@ def cmd_info(args: argparse.Namespace) -> int:
     checks = [
         ("tree-sitter",        "import tree_sitter"),
         ("tree-sitter-c",      "import tree_sitter_c"),
+        ("tree-sitter-cpp",    "import tree_sitter_cpp"),
+        ("tree-sitter-java",   "import tree_sitter_java"),
         ("tree-sitter-python", "import tree_sitter_python"),
         ("tree-sitter-go",     "import tree_sitter_go"),
         ("networkx",           "import networkx"),
@@ -295,7 +304,12 @@ def cmd_info(args: argparse.Namespace) -> int:
     try:
         import ollama
         models = ollama.list()
-        model_names = [m["name"] for m in models.get("models", [])]
+        
+        if hasattr(models, 'models'):
+            model_names = [m.model for m in models.models]
+        else:
+            model_names = [m.get("name", m.get("model")) for m in models.get("models", [])]
+            
         if model_names:
             console.print(
                 f"\n[green]✓ Ollama running[/green] "
@@ -333,6 +347,11 @@ def cmd_info(args: argparse.Namespace) -> int:
 
 def main() -> None:
     print_banner()
+    
+    # Auto-insert 'scan' if the first argument is likely a path or option
+    if len(sys.argv) > 1 and sys.argv[1] not in ["scan", "info", "-h", "--help"]:
+        sys.argv.insert(1, "scan")
+
     parser = build_parser()
     args = parser.parse_args()
 

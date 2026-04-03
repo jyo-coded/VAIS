@@ -198,7 +198,7 @@ def _render_report(con: Console, r: dict) -> None:
     con.print(Panel(
         Text.assemble(
             ("Assessment complete. ", "bold green"),
-            (f"{n_total} vulnerabilities found across C / Python / Go. ", "white"),
+            (f"{n_total} vulnerabilities found across C / C++ / Java / Python / Go. ", "white"),
             (f"{n_patched} patches applied. ", "white"),
             (f"Fix rate: {fix_rate:.1%}.", "bold"),
         ),

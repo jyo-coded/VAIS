@@ -29,8 +29,8 @@ from agent.tools import (
 
 # ─── Config ───────────────────────────────────────────────────────────────────
 
-DEFAULT_MODEL     = "codellama"
-FALLBACK_MODEL    = "mistral"
+DEFAULT_MODEL     = "qwen2.5-coder:1.5b"
+FALLBACK_MODEL    = "codellama"
 MAX_VULNS_PER_RUN = 20
 OLLAMA_TIMEOUT    = 60
 
@@ -96,7 +96,11 @@ class OllamaAgent:
         try:
             import ollama
             resp      = ollama.list()
-            available = [m["name"] for m in resp.get("models", [])]
+            
+            if hasattr(resp, 'models'):
+                available = [m.model for m in resp.models]
+            else:
+                available = [m.get("name", m.get("model")) for m in resp.get("models", [])]
 
             for candidate in [self.model, FALLBACK_MODEL]:
                 if any(candidate in m for m in available):
@@ -168,7 +172,10 @@ class OllamaAgent:
                 messages=[{"role": "user", "content": prompt}],
                 options={"temperature": 0.1, "num_predict": 200},
             )
-            raw = response.get("message", {}).get("content", "")
+            if hasattr(response, 'message'):
+                raw = response.message.content
+            else:
+                raw = response.get("message", {}).get("content", "")
         except Exception as e:
             raise RuntimeError(f"Ollama call failed: {e}")
 

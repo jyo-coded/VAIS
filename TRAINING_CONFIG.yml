@@ -1,0 +1,252 @@
+# Training Configuration Example
+# 
+# This file shows various training configurations for different scenarios.
+# You can extend train_models.py to support YAML config loading.
+
+# ─── Configuration 1: Default Balanced Training ───────────────────────────────
+config_balanced:
+  name: "Balanced Training"
+  description: "Recommended default configuration for most scenarios"
+  
+  dataset:
+    strategy: "moderate"           # mild, moderate, strict
+    val_split: 0.20                # 20% validation split
+    augmentation:
+      enabled: true                # Enable synthetic augmentation
+      factor: 4                     # 4x augmented samples per original
+      noise_std: 0.05              # Gaussian noise standard deviation
+    
+    resampling:
+      oversample_minority: true    # SMOTE-like oversampling
+      min_samples_for_smote: 20    # Minimum to trigger oversampling
+  
+  evaluation:
+    cross_validation: true         # Enable k-fold CV
+    cv_folds: 5                    # 5-fold by default
+    cv_strategy: "stratified"      # Maintain class balance in folds
+  
+  output:
+    save_models: true
+    save_report: true
+    report_format: "json"
+    save_predictions: false
+
+# ─── Configuration 2: High Precision (Production) ──────────────────────────────
+config_production:
+  name: "Production High Precision"
+  description: "Optimized for deployment with maximum confidence"
+  
+  dataset:
+    strategy: "strict"             # Strict labeling for high confidence
+    val_split: 0.15                # Smaller val set to maximize training
+    augmentation:
+      enabled: true
+      factor: 3                     # Slightly less augmentation
+      noise_std: 0.03              # Reduced noise
+    
+    resampling:
+      oversample_minority: true
+      min_samples_for_smote: 10
+  
+  evaluation:
+    cross_validation: true
+    cv_folds: 10                   # More folds for better estimate
+    cv_strategy: "stratified"
+  
+  output:
+    save_models: true
+    save_report: true
+    report_format: "json"
+    save_predictions: true
+
+# ─── Configuration 3: Fast Iteration (Development) ────────────────────────────
+config_dev:
+  name: "Development Fast Iteration"
+  description: "Optimized for rapid experimentation"
+  
+  dataset:
+    strategy: "moderate"
+    val_split: 0.25                # Larger val set for quick feedback
+    augmentation:
+      enabled: false               # Disable for speed
+      factor: 0
+    
+    resampling:
+      oversample_minority: false   # Skip for speed
+  
+  evaluation:
+    cross_validation: false        # Skip CV for faster iteration
+    cv_folds: 0
+  
+  output:
+    save_models: true
+    save_report: false             # Skip for speed
+    save_predictions: false
+
+# ─── Configuration 4: Small Dataset (< 100 samples) ──────────────────────────
+config_small_data:
+  name: "Small Dataset Training"
+  description: "Optimized for datasets with fewer than 100 samples"
+  
+  dataset:
+    strategy: "lenient"            # Lenient to maximize samples
+    val_split: 0.10                # Small val set to preserve train samples
+    augmentation:
+      enabled: true
+      factor: 6                     # More augmentation for small data
+      noise_std: 0.08              # Higher noise for diversity
+    
+    resampling:
+      oversample_minority: true
+      min_samples_for_smote: 5    # Lower threshold for small data
+  
+  evaluation:
+    cross_validation: true
+    cv_folds: 10                   # Leave-One-Out like approach
+    cv_strategy: "stratified"
+  
+  output:
+    save_models: true
+    save_report: true
+    report_format: "json"
+    save_predictions: true
+
+# ─── Configuration 5: Large Dataset (> 1000 samples) ──────────────────────────
+config_large_data:
+  name: "Large Dataset Training"
+  description: "Optimized for datasets with > 1000 samples"
+  
+  dataset:
+    strategy: "strict"             # Strict for better precision
+    val_split: 0.20
+    augmentation:
+      enabled: true
+      factor: 2                     # Less augmentation for large data
+      noise_std: 0.02              # Minimal noise
+    
+    resampling:
+      oversample_minority: false   # Less needed with large data
+      min_samples_for_smote: 100
+  
+  evaluation:
+    cross_validation: true
+    cv_folds: 5                    # Fewer folds, more stable
+    cv_strategy: "stratified"
+  
+  output:
+    save_models: true
+    save_report: true
+    report_format: "json"
+    save_predictions: true
+
+# ─── Configuration 6: Interpretability Focus ───────────────────────────────────
+config_interpretability:
+  name: "Interpretability Focus"
+  description: "Optimized for model explainability and understanding"
+  
+  dataset:
+    strategy: "moderate"
+    val_split: 0.20
+    augmentation:
+      enabled: false               # Disable augmentation for clarity
+      factor: 0
+    
+    resampling:
+      oversample_minority: false   # Keep original distribution
+  
+  evaluation:
+    cross_validation: true
+    cv_folds: 10                   # Better understanding of variance
+    detailed_analysis: true
+    feature_interaction_analysis: true  # ← Enable interaction study
+    partial_dependence: true             # ← Enable PD analysis
+  
+  output:
+    save_models: true
+    save_report: true
+    save_feature_importance: true        # ← Detailed analysis
+    save_explanations: true              # ← Prediction explanations
+    report_format: "json"
+
+# ─── Configuration 7: Ensemble/Comparison ─────────────────────────────────────
+config_ensemble:
+  name: "Multiple Strategy Comparison"
+  description: "Training multiple models for ensemble"
+  
+  strategies:
+    - strategy: "strict"
+      name: "strict_model"
+      config:
+        augmentation:
+          enabled: true
+          factor: 2
+        cv_folds: 5
+    
+    - strategy: "moderate"
+      name: "moderate_model"
+      config:
+        augmentation:
+          enabled: true
+          factor: 4
+        cv_folds: 5
+    
+    - strategy: "lenient"
+      name: "lenient_model"
+      config:
+        augmentation:
+          enabled: true
+          factor: 6
+        cv_folds: 5
+  
+  ensemble:
+    method: "weighted_average"     # Combine predictions
+    weights: [0.3, 0.5, 0.2]       # Prefer moderate strategy
+
+# ─── Hyperparameter Ranges (for future optimization) ────────────────────────
+hyperparameter_space:
+  xgboost:
+    n_estimators: [80, 150, 250]
+    max_depth: [3, 5, 7]
+    learning_rate: [0.05, 0.08, 0.1]
+    subsample: [0.7, 0.85, 1.0]
+    reg_lambda: [0.5, 1.5, 3.0]
+  
+  randomforest:
+    n_estimators: [80, 150, 250]
+    max_depth: [5, 7, 10]
+    min_samples_split: [2, 5, 10]
+    max_features: ["sqrt", "log2"]
+
+# ─── Recommended Training Commands ────────────────────────────────────────────
+
+# Balanced training (default, recommended)
+# python train_models.py --input features.npy --strategy moderate --cv
+
+# Production deployment
+# python train_models.py --input features.npy --strategy strict --cv --cv-folds 10
+
+# Fast development iteration
+# python train_models.py --input features.npy --no-augment
+
+# Small dataset training
+# python train_models.py --input features.npy --strategy lenient --cv --cv-folds 10
+
+# Large dataset training
+# python train_models.py --input features.npy --strategy strict --no-augment
+
+# Interpretability focused
+# python train_models.py --input features.npy --strategy moderate --cv --report report.json
+
+###############################################################################
+# USING THIS FILE
+# 
+# To use YAML-based configuration in train_models.py, extend the script with:
+#
+# import yaml
+#
+# def load_config(config_path):
+#     with open(config_path, 'r') as f:
+#         return yaml.safe_load(f)
+#
+# Better yet, create a config loader module that validates and applies config
+###############################################################################

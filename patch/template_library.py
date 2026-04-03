@@ -128,6 +128,34 @@ def _patch_memcpy(line: str, fn: str, lines: list, idx: int) -> list[str]:
     return [line]
 
 
+# ─── Go-specific patches ─────────────────────────────────────────────────────
+
+def _patch_go_exec_command(line: str, fn: str, lines: list, idx: int) -> list[str]:
+    """
+    Go: Replace exec.Command("bash", "-c", userInput) with direct command execution.
+    
+    Vulnerable: exec.Command("bash", "-c", input).Run()
+    Safe:       exec.Command("bash", input).Run()
+    
+    This removes the shell interpretation layer and prevents command injection.
+    """
+    ind = _indent(line)
+    s   = _strip(line)
+    
+    # Match: exec.Command("bash", "-c", arg) or exec.Command("sh", "-c", arg)
+    m = re.search(r'exec\.Command\s*\(\s*"(bash|sh)"\s*,\s*"-c"\s*,\s*(.+?)\s*\)', s)
+    if m:
+        shell = m.group(1)
+        arg = m.group(2)
+        # Remove the "-c" flag entirely to execute directly
+        return [
+            f"{ind}// PATCHED: Avoid shell execution (CWE-78)\n",
+            f"{ind}exec.Command(\"{shell}\", {arg}).Run()",
+        ]
+    
+    return [line]
+
+
 # ─── CWE-134: Format string injection ────────────────────────────────────────
 
 def _patch_format_string(line: str, fn: str, lines: list, idx: int) -> list[str]:
@@ -301,6 +329,23 @@ TEMPLATES: list[PatchTemplate] = [
         match_fn=lambda l: bool(re.search(r'\bfree\s*\(', l)),
         patch_fn=_patch_double_free,
     ),
+
+    # ─── Go patches for CWE-78: Command Injection ─────────────────────────
+    PatchTemplate(
+        cwe="CWE-78", strategy="use_arg_list_no_shell",
+        description="Go: Remove -c flag from exec.Command() to prevent shell injection",
+        safe_example='exec.Command("bash", arg).Run()  // Direct execution without shell',
+        match_fn=lambda l: bool(re.search(r'exec\.Command\s*\(\s*"(bash|sh)"\s*,\s*"-c"', l)),
+        patch_fn=_patch_go_exec_command,
+    ),
+
+    PatchTemplate(
+        cwe="CWE-78", strategy="sanitize_input",
+        description="Go: Remove -c flag from exec.Command() to prevent shell injection",
+        safe_example='exec.Command("bash", arg).Run()  // Direct execution without shell',
+        match_fn=lambda l: bool(re.search(r'exec\.Command\s*\(\s*"(bash|sh)"\s*,\s*"-c"', l)),
+        patch_fn=_patch_go_exec_command,
+    ),
 ]
 
 # ─── Lookup ───────────────────────────────────────────────────────────────────
@@ -308,17 +353,44 @@ TEMPLATES: list[PatchTemplate] = [
 def get_template(
     cwe:      str,
     strategy: str,
+    target_line: Optional[str] = None,
 ) -> Optional[PatchTemplate]:
-    """Return the best matching template for a (CWE, strategy) pair."""
-    # Exact match first
+    """
+    Return the best matching template for a (CWE, strategy) pair.
+    
+    If target_line is provided, it will test match_fn on it and prefer
+    templates that actually match the line content.
+    """
+    candidates = []
+    
+    # Exact match (CWE + strategy)
     for t in TEMPLATES:
         if t.cwe == cwe and t.strategy == strategy:
-            return t
+            candidates.append(t)
+    
+    if candidates:
+        # If we have the target line, find one that matches
+        if target_line:
+            for t in candidates:
+                if t.match_fn(target_line):
+                    return t
+        # Otherwise return first candidate
+        return candidates[0] if candidates else None
 
     # Strategy match only (CWE may vary due to overlapping strategies)
+    candidates = []
     for t in TEMPLATES:
         if t.strategy == strategy:
-            return t
+            candidates.append(t)
+    
+    if candidates:
+        # If we have the target line, find one that matches
+        if target_line:
+            for t in candidates:
+                if t.match_fn(target_line):
+                    return t
+        # Otherwise return first candidate
+        return candidates[0] if candidates else None
 
     # CWE match only — return first template for this CWE
     for t in TEMPLATES:

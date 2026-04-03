@@ -196,13 +196,6 @@ class PatchEngine:
             success=False,
         )
 
-        template = get_template(vuln.cwe.value, strategy)
-        if not template:
-            result.error = f"No template found for ({vuln.cwe.value}, {strategy})"
-            return result
-
-        result.description = template.description
-
         # Find the vulnerable line (1-indexed → 0-indexed)
         target_idx = vuln.line_start - 1
         if target_idx < 0 or target_idx >= len(lines):
@@ -210,6 +203,14 @@ class PatchEngine:
             return result
 
         target_line = lines[target_idx]
+
+        # Get template with line content for smarter matching
+        template = get_template(vuln.cwe.value, strategy, target_line)
+        if not template:
+            result.error = f"No template found for ({vuln.cwe.value}, {strategy})"
+            return result
+
+        result.description = template.description
 
         # Check template matches this line
         if not template.match_fn(target_line):

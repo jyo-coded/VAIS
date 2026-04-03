@@ -18,24 +18,37 @@ import json
 
 class Language(str, Enum):
     C      = "c"
+    CPP    = "cpp"
+    JAVA   = "java"
     PYTHON = "python"
     GO     = "go"
 
     @classmethod
     def from_extension(cls, ext: str) -> Optional["Language"]:
         return {
-            ".c":  cls.C,
-            ".h":  cls.C,
-            ".py": cls.PYTHON,
-            ".go": cls.GO,
+            ".c":    cls.C,
+            ".h":    cls.C,
+            ".cpp":  cls.CPP,
+            ".cc":   cls.CPP,
+            ".cxx":  cls.CPP,
+            ".hpp":  cls.CPP,
+            ".java": cls.JAVA,
+            ".py":   cls.PYTHON,
+            ".go":   cls.GO,
         }.get(ext.lower())
 
     @classmethod
     def from_string(cls, s: str) -> "Language":
         s = s.lower().strip()
-        aliases = {"c": cls.C, "python": cls.PYTHON, "py": cls.PYTHON, "go": cls.GO, "golang": cls.GO}
+        aliases = {
+            "c": cls.C, 
+            "cpp": cls.CPP, "c++": cls.CPP,
+            "java": cls.JAVA,
+            "python": cls.PYTHON, "py": cls.PYTHON, 
+            "go": cls.GO, "golang": cls.GO
+        }
         if s not in aliases:
-            raise ValueError(f"Unsupported language: '{s}'. Choose from: c, python, go")
+            raise ValueError(f"Unsupported language: '{s}'. Choose from: c, cpp, java, python, go")
         return aliases[s]
 
 

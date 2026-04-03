@@ -155,7 +155,7 @@ pytest tests/ -v
 
 # Run a specific phase
 pytest tests/phase2/ -v
-pytest tests/phase5/ -v
+pytest tests/phase5/ -v 
 ```
 
 ---

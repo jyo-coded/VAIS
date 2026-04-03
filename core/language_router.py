@@ -29,7 +29,7 @@ SKIP_PATTERNS = {
     "venv", "env", ".mypy_cache", ".pytest_cache",
 }
 
-SUPPORTED_EXTENSIONS = {".c", ".h", ".py", ".go"}
+SUPPORTED_EXTENSIONS = {".c", ".h", ".cpp", ".cc", ".cxx", ".hpp", ".java", ".py", ".go"}
 
 
 class LanguageRouter:
@@ -45,7 +45,7 @@ class LanguageRouter:
     def __init__(
         self,
         path: str,
-        lang_override: Optional[str] = None,   # "auto", "c", "python", "go", or None
+        lang_override: Optional[str] = None,   # "auto", "c", "cpp", "java", "python", "go", or None
         verbose: bool = True,
     ):
         self.path = Path(path).resolve()
@@ -131,7 +131,7 @@ class LanguageRouter:
             except ValueError:
                 raise ValueError(
                     f"Invalid --lang value: '{self.lang_override}'. "
-                    f"Choose from: c, python, go"
+                    f"Choose from: c, cpp, java, python, go"
                 )
 
         # Auto-detect from extension
@@ -166,6 +166,8 @@ class LanguageRouter:
         mode = "manual" if (self.lang_override and self.lang_override != "auto") else "auto"
         lang_colors = {
             Language.C:      "cyan",
+            Language.CPP:    "magenta",
+            Language.JAVA:   "red",
             Language.PYTHON: "yellow",
             Language.GO:     "blue",
         }
@@ -184,7 +186,7 @@ class LanguageRouter:
         # Summary line
         summary_parts = [f"[{c}]{lang}[/{c}]: {count}" for (lang, count), c in zip(
             by_lang.items(),
-            ["cyan", "yellow", "blue", "green"]
+            ["cyan", "magenta", "red", "yellow", "blue", "green"]
         )]
         console.print(f"  [dim]Total:[/dim] {' · '.join(summary_parts)}")
         console.print()
