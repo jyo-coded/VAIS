@@ -1,0 +1,174 @@
+{
+  "n_vulns": 9,
+  "n_features": 12,
+  "feature_names": [
+    "cwe_cvss_score",
+    "severity_score",
+    "confidence",
+    "reachable_from_entry",
+    "has_extern_input",
+    "call_depth",
+    "in_loop",
+    "pointer_ops",
+    "unsafe_api_count",
+    "alloc_without_free",
+    "loop_depth",
+    "language_risk"
+  ],
+  "nvd_online": false,
+  "features": [
+    {
+      "vuln_id": "VAPT-JAVA-001",
+      "features": {
+        "cwe_cvss_score": 0.5,
+        "severity_score": 1.0,
+        "confidence": 0.9,
+        "reachable_from_entry": 1.0,
+        "has_extern_input": 0.0,
+        "call_depth": 0.1,
+        "in_loop": 0.0,
+        "pointer_ops": 0.0,
+        "unsafe_api_count": 0.0,
+        "alloc_without_free": 0.0,
+        "loop_depth": 0.0,
+        "language_risk": 0.5
+      }
+    },
+    {
+      "vuln_id": "VAPT-JAVA-002",
+      "features": {
+        "cwe_cvss_score": 0.91,
+        "severity_score": 1.0,
+        "confidence": 0.88,
+        "reachable_from_entry": 0.0,
+        "has_extern_input": 0.0,
+        "call_depth": 0.0,
+        "in_loop": 0.0,
+        "pointer_ops": 0.0,
+        "unsafe_api_count": 0.0,
+        "alloc_without_free": 0.0,
+        "loop_depth": 0.0,
+        "language_risk": 0.5
+      }
+    },
+    {
+      "vuln_id": "VAPT-JAVA-003",
+      "features": {
+        "cwe_cvss_score": 0.98,
+        "severity_score": 1.0,
+        "confidence": 0.87,
+        "reachable_from_entry": 1.0,
+        "has_extern_input": 0.0,
+        "call_depth": 0.1,
+        "in_loop": 0.0,
+        "pointer_ops": 0.0,
+        "unsafe_api_count": 0.0,
+        "alloc_without_free": 0.0,
+        "loop_depth": 0.0,
+        "language_risk": 0.5
+      }
+    },
+    {
+      "vuln_id": "VAPT-JAVA-004",
+      "features": {
+        "cwe_cvss_score": 0.75,
+        "severity_score": 0.8,
+        "confidence": 0.85,
+        "reachable_from_entry": 1.0,
+        "has_extern_input": 0.0,
+        "call_depth": 0.1,
+        "in_loop": 0.0,
+        "pointer_ops": 0.0,
+        "unsafe_api_count": 0.0,
+        "alloc_without_free": 0.0,
+        "loop_depth": 0.0,
+        "language_risk": 0.5
+      }
+    },
+    {
+      "vuln_id": "VAPT-JAVA-006",
+      "features": {
+        "cwe_cvss_score": 0.75,
+        "severity_score": 0.8,
+        "confidence": 0.85,
+        "reachable_from_entry": 1.0,
+        "has_extern_input": 0.0,
+        "call_depth": 0.1,
+        "in_loop": 0.0,
+        "pointer_ops": 0.0,
+        "unsafe_api_count": 0.0,
+        "alloc_without_free": 0.0,
+        "loop_depth": 0.0,
+        "language_risk": 0.5
+      }
+    },
+    {
+      "vuln_id": "VAPT-JAVA-007",
+      "features": {
+        "cwe_cvss_score": 0.5,
+        "severity_score": 0.8,
+        "confidence": 0.83,
+        "reachable_from_entry": 1.0,
+        "has_extern_input": 0.0,
+        "call_depth": 0.1,
+        "in_loop": 0.0,
+        "pointer_ops": 0.0,
+        "unsafe_api_count": 0.0,
+        "alloc_without_free": 0.0,
+        "loop_depth": 0.0,
+        "language_risk": 0.5
+      }
+    },
+    {
+      "vuln_id": "VAPT-JAVA-010",
+      "features": {
+        "cwe_cvss_score": 0.5,
+        "severity_score": 0.8,
+        "confidence": 0.83,
+        "reachable_from_entry": 1.0,
+        "has_extern_input": 0.0,
+        "call_depth": 0.1,
+        "in_loop": 0.0,
+        "pointer_ops": 0.0,
+        "unsafe_api_count": 0.0,
+        "alloc_without_free": 0.0,
+        "loop_depth": 0.0,
+        "language_risk": 0.5
+      }
+    },
+    {
+      "vuln_id": "VAPT-JAVA-012",
+      "features": {
+        "cwe_cvss_score": 0.65,
+        "severity_score": 0.5,
+        "confidence": 0.7,
+        "reachable_from_entry": 1.0,
+        "has_extern_input": 0.0,
+        "call_depth": 0.1,
+        "in_loop": 0.0,
+        "pointer_ops": 0.0,
+        "unsafe_api_count": 0.0,
+        "alloc_without_free": 0.0,
+        "loop_depth": 0.0,
+        "language_risk": 0.5
+      }
+    },
+    {
+      "vuln_id": "VAPT-JAVA-013",
+      "features": {
+        "cwe_cvss_score": 0.5,
+        "severity_score": 0.8,
+        "confidence": 0.83,
+        "reachable_from_entry": 1.0,
+        "has_extern_input": 0.0,
+        "call_depth": 0.1,
+        "in_loop": 0.0,
+        "pointer_ops": 0.0,
+        "unsafe_api_count": 0.0,
+        "alloc_without_free": 0.0,
+        "loop_depth": 0.0,
+        "language_risk": 0.5
+      }
+    }
+  ]
+}

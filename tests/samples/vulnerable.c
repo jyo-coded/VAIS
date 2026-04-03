@@ -1,79 +1,68 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 
-/* ── Vuln 1: Buffer overflow via strcpy ── */
-void greet_user(char *name) {
-    char buffer[64];
-    strcpy(buffer, name);          /* CWE-120: no bounds check */
-    printf("Hello, %s!\n", buffer);
+void vulnerable_function_1(char *input) {
+    char buffer[50];
+    // Buffer Overflow
+    strcpy(buffer, input);
+    strcat(buffer, input);
 }
 
-/* ── Vuln 2: gets() — always overflows ── */
-void read_input() {
-    char buf[128];
-    printf("Enter your name: ");
-    gets(buf);                     /* CWE-120: removed from C11 */
-    printf("Got: %s\n", buf);
+void vulnerable_function_2() {
+    char buffer[100];
+    // gets unbounded input
+    gets(buffer);
 }
 
-/* ── Vuln 3: Format string injection ── */
-void show_message(char *msg) {
-    printf(msg);                   /* CWE-134: user controls format */
+void vulnerable_function_3(char *user_data) {
+    char buffer[20];
+    // sprintf without bounds
+    sprintf(buffer, "User: %s", user_data);
 }
 
-/* ── Vuln 4: Command injection via system() ── */
-void run_file(char *filename) {
-    char cmd[256];
-    sprintf(cmd, "cat %s", filename);
-    system(cmd);                   /* CWE-78: shell injection */
+void vulnerable_function_4() {
+    char buf[10];
+    // scanf unbounded string
+    scanf("%s", buf);
 }
 
-/* ── Vuln 5: Use-after-free ── */
-void process_data() {
-    char *ptr = (char *)malloc(256);
-    if (!ptr) return;
-    strcpy(ptr, "sensitive_data");
+void vulnerable_function_5(char *user_fmt) {
+    // format string injection
+    printf(user_fmt);
+    sprintf(user_fmt);
+}
+
+void vulnerable_function_6(char *cmd) {
+    // command injection
+    system(cmd);
+    popen(cmd, "r");
+}
+
+void vulnerable_function_7() {
+    char *ptr = malloc(100);
     free(ptr);
-    printf("Data: %s\n", ptr);    /* CWE-416: use after free */
+    // Use-After-Free & Double-Free
+    strcpy(ptr, "bad data");
+    free(ptr);
 }
 
-/* ── Vuln 6: Double free ── */
-void cleanup(int *data) {
-    free(data);
-    free(data);                    /* CWE-415: double free */
+void vulnerable_function_8(char *src, int len) {
+    char dest[50];
+    // memcpy without bounds derived from dest
+    memcpy(dest, src, len);
 }
 
-/* ── Vuln 7: sprintf overflow ── */
-void build_query(char *user_input) {
-    char query[64];
-    sprintf(query, "SELECT * FROM users WHERE name='%s'", user_input);
-    printf("Query: %s\n", query); /* CWE-120: query overflows buf */
-}
-
-/* ── Vuln 8: memcpy without sizeof ── */
-void copy_payload(char *src, int len) {
-    char dest[128];
-    memcpy(dest, src, len);        /* CWE-125: len not bounded */
-    printf("Copied.\n");
-}
-
-int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        fprintf(stderr, "Usage: %s <input>\n", argv[0]);
-        return 1;
+int main(int argc, char **argv) {
+    if(argc > 1) {
+        vulnerable_function_1(argv[1]);
+        vulnerable_function_3(argv[1]);
+        vulnerable_function_5(argv[1]);
+        vulnerable_function_6(argv[1]);
+        vulnerable_function_8(argv[1], 100);
     }
-
-    greet_user(argv[1]);
-    show_message(argv[1]);
-    run_file(argv[1]);
-    read_input();
-
-    int *data = (int *)malloc(sizeof(int) * 10);
-    cleanup(data);
-
-    build_query(argv[1]);
-    copy_payload(argv[1], 999);   /* passing unchecked length */
-
+    vulnerable_function_2();
+    vulnerable_function_4();
+    vulnerable_function_7();
     return 0;
 }

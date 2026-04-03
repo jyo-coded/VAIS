@@ -44,6 +44,19 @@ class CWE(str, Enum):
     RACE_CONDITION      = "CWE-362"   # Concurrent access without sync
     UNSAFE_POINTER      = "CWE-242"   # Use of inherently unsafe function
 
+    # C++ aliases / additions
+    BUFFER_COPY_WITHOUT_CHECKING_SIZE = "CWE-120"   # alias for BUFFER_OVERFLOW
+    USE_OF_INHERENTLY_DANGEROUS_FUNCTION = "CWE-242" # alias for UNSAFE_POINTER
+    MEMORY_LEAK         = "CWE-401"   # Memory leak (raw new without delete)
+    INTEGER_OVERFLOW    = "CWE-190"   # Integer overflow / wrap-around
+    INCORRECT_PERMISSIONS = "CWE-732" # Incorrect permission assignment
+
+    # Java / cross-language
+    SQL_INJECTION       = "CWE-89"    # SQL injection via string concat
+    XXE                 = "CWE-611"   # XML External Entity injection
+    HARDCODED_CRYPTO_KEY = "CWE-321"  # Hardcoded cryptographic key
+    WEAK_CRYPTO         = "CWE-327"   # Use of a broken/risky crypto algorithm
+
 
 class Severity(str, Enum):
     CRITICAL = "CRITICAL"
@@ -98,6 +111,13 @@ class VulnObject:
     has_extern_input:     bool              = False
     call_depth:           int               = 0
     in_loop:              bool              = False
+
+    # Taint Analysis fields
+    taint_confirmed:      bool              = False
+    taint_path:           Optional[str]     = None
+
+    # Standards Citation fields
+    standards_citation:   Optional[str]     = None
 
     # ML scores (attached by Phase 4)
     exploit_prob:         Optional[float]   = None   # 0.0 – 1.0
@@ -166,6 +186,9 @@ class VulnObject:
             "has_extern_input":    self.has_extern_input,
             "call_depth":          self.call_depth,
             "in_loop":             self.in_loop,
+            "taint_confirmed":     self.taint_confirmed,
+            "taint_path":          self.taint_path,
+            "standards_citation":  self.standards_citation,
             "exploit_prob":        self.exploit_prob,
             "risk_score":          self.risk_score,
             "ml_severity":         self.ml_severity.value if self.ml_severity else None,

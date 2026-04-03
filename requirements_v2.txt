@@ -1,0 +1,10 @@
+google-adk
+langgraph
+flask-socketio
+torch
+transformers
+datasets
+torch-geometric
+rdkit
+matplotlib
+seaborn

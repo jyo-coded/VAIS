@@ -1,0 +1,292 @@
+{
+  "nodes": [
+    {
+      "id": "vulnerableMethod1",
+      "language": "java",
+      "file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+      "start_line": 9,
+      "end_line": 15,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "vulnerableMethod2",
+      "language": "java",
+      "file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+      "start_line": 17,
+      "end_line": 21,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "vulnerableMethod3",
+      "language": "java",
+      "file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+      "start_line": 23,
+      "end_line": 27,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "vulnerableMethod4",
+      "language": "java",
+      "file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+      "start_line": 29,
+      "end_line": 32,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "vulnerableMethod5",
+      "language": "java",
+      "file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+      "start_line": 34,
+      "end_line": 37,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "vulnerableMethod6",
+      "language": "java",
+      "file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+      "start_line": 39,
+      "end_line": 44,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "vulnerableMethod7",
+      "language": "java",
+      "file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+      "start_line": 46,
+      "end_line": 49,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "vulnerableMethod8",
+      "language": "java",
+      "file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+      "start_line": 51,
+      "end_line": 54,
+      "is_entry": false,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": false
+    },
+    {
+      "id": "main",
+      "language": "java",
+      "file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+      "start_line": 56,
+      "end_line": 67,
+      "is_entry": true,
+      "loop_depth": 0,
+      "pointer_ops": 0,
+      "extern_input": true
+    },
+    {
+      "id": "getConnection",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "createStatement",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "executeQuery",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "prepareStatement",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "newInstance",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "newDocumentBuilder",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "readObject",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "exec",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "getRuntime",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "length",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "getProperty",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    },
+    {
+      "id": "getBytes",
+      "language": "java",
+      "file": "external",
+      "is_entry": false,
+      "external": true
+    }
+  ],
+  "edges": [
+    {
+      "from": "vulnerableMethod1",
+      "to": "getConnection",
+      "line": 11
+    },
+    {
+      "from": "vulnerableMethod1",
+      "to": "createStatement",
+      "line": 12
+    },
+    {
+      "from": "vulnerableMethod1",
+      "to": "executeQuery",
+      "line": 13
+    },
+    {
+      "from": "vulnerableMethod1",
+      "to": "prepareStatement",
+      "line": 14
+    },
+    {
+      "from": "vulnerableMethod2",
+      "to": "newInstance",
+      "line": 19
+    },
+    {
+      "from": "vulnerableMethod2",
+      "to": "newDocumentBuilder",
+      "line": 20
+    },
+    {
+      "from": "vulnerableMethod3",
+      "to": "readObject",
+      "line": 26
+    },
+    {
+      "from": "vulnerableMethod5",
+      "to": "exec",
+      "line": 36
+    },
+    {
+      "from": "vulnerableMethod5",
+      "to": "getRuntime",
+      "line": 36
+    },
+    {
+      "from": "vulnerableMethod7",
+      "to": "length",
+      "line": 48
+    },
+    {
+      "from": "vulnerableMethod7",
+      "to": "getProperty",
+      "line": 48
+    },
+    {
+      "from": "vulnerableMethod8",
+      "to": "getBytes",
+      "line": 53
+    },
+    {
+      "from": "main",
+      "to": "vulnerableMethod1",
+      "line": 59
+    },
+    {
+      "from": "main",
+      "to": "vulnerableMethod4",
+      "line": 60
+    },
+    {
+      "from": "main",
+      "to": "vulnerableMethod5",
+      "line": 61
+    },
+    {
+      "from": "main",
+      "to": "vulnerableMethod2",
+      "line": 63
+    },
+    {
+      "from": "main",
+      "to": "vulnerableMethod6",
+      "line": 64
+    },
+    {
+      "from": "main",
+      "to": "vulnerableMethod7",
+      "line": 65
+    },
+    {
+      "from": "main",
+      "to": "vulnerableMethod8",
+      "line": 66
+    }
+  ],
+  "entry_points": [
+    "main"
+  ],
+  "stats": {
+    "total_nodes": 21,
+    "total_edges": 19,
+    "is_dag": true
+  }
+}

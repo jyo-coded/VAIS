@@ -2,40 +2,56 @@ package main
 
 import (
 	"fmt"
-	"os/exec"
 	"os"
+	"os/exec"
+	"unsafe"
 )
 
-// CWE-78: command injection
-func runCommand(input string) {
-	exec.Command("bash", "-c", input).Run()
+func vulnerable_function_1(userInput string) {
+	// Rule 1: exec.Command with user input (Command Injection)
+	cmd := exec.Command("bash", "-c", userInput)
+	cmd.Run()
 }
 
-// CWE-78: another command injection
-func runSystem(cmd string) {
-	exec.Command("sh", "-c", cmd).Run()
+func vulnerable_function_2() {
+	// Rule 2: unsafe.Pointer Usage
+	var x int = 10
+	ptr := unsafe.Pointer(&x)
+	_ = ptr
 }
 
-// CWE-330: weak/hardcoded value
-func weakRandom() int {
-	return 4
+func vulnerable_function_3() {
+	// Rule 3: Ignored Error Returns
+	f, _ := os.Open("secret.txt")
+	defer f.Close()
+	
+	_, err := os.Create("test.txt")
 }
 
-// CWE-732: insecure file permissions
-func writeFile(data string) {
-	os.WriteFile("output.txt", []byte(data), 0777)
+func vulnerable_function_4(userFormat string) {
+	// Rule 4: fmt.Sprintf Format String
+	res := fmt.Sprintf(userFormat)
+	fmt.Printf(userFormat)
 }
 
-// CWE-120: no bounds check on input
-func readInput() {
-	var buf [10]byte
-	fmt.Scanf("%s", &buf)
+func vulnerable_function_5() {
+	// Rule 5: os.Args Without Validation
+	arg := os.Args[1]
+	fmt.Println(arg)
+}
+
+func vulnerable_function_6() {
+	// Rule 6: Hardcoded Secrets
+	apiKey := "AIzaSyDxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	password := "superSecret123!"
+	secretKey = "1234567890abcdef1234567890abcdef"
 }
 
 func main() {
-	runCommand("ls")
-	runSystem("whoami")
-	writeFile("test")
-	readInput()
-	fmt.Println(weakRandom())
+	vulnerable_function_5()
+	vulnerable_function_1(os.Args[1])
+	vulnerable_function_2()
+	vulnerable_function_3()
+	vulnerable_function_4(os.Args[1])
+	vulnerable_function_6()
 }

@@ -1,0 +1,50 @@
+{
+  "classifier": {
+    "accuracy": 0.5,
+    "f1_score": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "auc_roc": 0.5,
+    "train_time": 3.017
+  },
+  "regressor": {
+    "mae": 0.0394,
+    "mse": 0.0039,
+    "rmse": 0.0623,
+    "r2_score": -0.0779,
+    "train_time": 0.682
+  },
+  "feature_importances": {
+    "cwe_cvss_score": 0.0,
+    "severity_score": 0.0,
+    "confidence": 0.0,
+    "reachable_from_entry": 0.0,
+    "has_extern_input": 0.0,
+    "call_depth": 0.0,
+    "in_loop": 0.0,
+    "pointer_ops": 0.0,
+    "unsafe_api_count": 0.0,
+    "alloc_without_free": 0.0,
+    "loop_depth": 0.0,
+    "language_risk": 0.0
+  },
+  "regressor_feature_importances": {
+    "cwe_cvss_score": 0.2373,
+    "severity_score": 0.2669,
+    "confidence": 0.2636,
+    "reachable_from_entry": 0.0,
+    "has_extern_input": 0.0,
+    "call_depth": 0.0258,
+    "in_loop": 0.0,
+    "pointer_ops": 0.0184,
+    "unsafe_api_count": 0.1083,
+    "alloc_without_free": 0.0,
+    "loop_depth": 0.0512,
+    "language_risk": 0.0285
+  },
+  "total_time": 3.77,
+  "n_train": 40,
+  "n_val": 10,
+  "dataset_balanced": true,
+  "exploit_ratio": 0.5
+}

@@ -33,7 +33,7 @@ BANNER = """
    ╚═══╝  ╚═╝  ╚═╝╚═╝        ╚═╝   
 """
 
-VERSION  = "1.0.0"
+VERSION  = "2.0.0"
 TAGLINE  = "Agent-Orchestrated Hybrid Static Vulnerability Assessment System"
 LANGS    = "C · C++ · Java · Python · Go"
 
@@ -224,14 +224,25 @@ def cmd_scan(args: argparse.Namespace) -> int:
         console.print("[dim]Stopped at Phase 4 (--phase 4)[/dim]")
         return 0
 
-    # ── Phase 5 ───────────────────────────────────────────────────────────
-    from agent.phase5 import run_phase5
+    # ── Phase 5 — ADK Multi-Agent Analysis ──────────────────────────────
+    from agents.phase5 import run_phase5_sync
 
-    phase5_result = run_phase5(
-        phase4_result=phase4_result,
-        output_dir=str(output_dir / "phase5"),
-        verbose=verbose,
-    )
+    console.rule("[bold magenta]PHASE 5 — Agentic Analysis (ADK)[/bold magenta]", style="magenta")
+    console.print("  [dim]Running: Tanuki → Tsushima + Iriomote → Raijū → Yamabiko[/dim]\n")
+
+    phase5_result = run_phase5_sync(phase4_result=phase4_result)
+
+    if verbose:
+        for msg in phase5_result.messages:
+            emoji = msg.get('emoji', '🤖')
+            name  = msg.get('agent_name', 'Agent')
+            text  = msg.get('text', '')
+            colour_map = {'critical': 'red', 'warning': 'yellow', 'patch_request': 'cyan', 'info': 'white', 'confirmation': 'green'}
+            style = colour_map.get(msg.get('message_type', 'info'), 'white')
+            console.print(f"  {emoji} [{style}]{name}[/{style}]: {text[:200]}..." if len(text) > 200 else f"  {emoji} [{style}]{name}[/{style}]: {text}")
+
+        if phase5_result.patch_confirmations_pending:
+            console.print(f"\n  [cyan]⚡ {len(phase5_result.patch_confirmations_pending)} patch(es) pending confirmation.[/cyan]")
 
     if args.phase == 5:
         console.print("[dim]Stopped at Phase 5 (--phase 5)[/dim]")

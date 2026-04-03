@@ -1,43 +1,59 @@
 #include <iostream>
-#include <cstring>
-#include <cstdlib>
+#include <string>
 
 using namespace std;
 
-void bad_buffer_copy(const char* input) {
-    char buffer[50];
-    // Unchecked buffer copy (CWE-120)
-    strcpy(buffer, input);
-    cout << "Buffer contains: " << buffer << endl;
+void cpp_vuln_function_1() {
+    int* ptr = new int[100];
+    // Memory leak via raw new (no delete)
 }
 
-void bad_system_call(const char* user_input) {
-    char cmd[100];
-    snprintf(cmd, sizeof(cmd), "ls -l %s", user_input);
-    // Command Injection (CWE-78)
-    system(cmd);
+void cpp_vuln_function_2() {
+    char* data = new char[50];
+    delete[] data;
+    // Use after delete
+    data[0] = 'a';
 }
 
-void bad_gets_call() {
-    char buf[100];
-    cout << "Enter text: ";
-    // Dangerous function (CWE-242)
-    gets(buf);
+void cpp_vuln_function_3(int* user_controlled_ptr) {
+    // Null pointer dereference (uncaught)
+    int val = *user_controlled_ptr;
 }
 
-int main(int argc, char** argv) {
-    if (argc > 1) {
-        bad_buffer_copy(argv[1]);
-        bad_system_call(argv[1]);
-    }
-    
-    bad_gets_call();
-    
-    // Test memory allocation tracking (CWE-416)
-    char* ptr = new char[100];
-    delete[] ptr;
-    // Note: use after free logic checks `free()` not `delete` currently,
-    // so this is just to ensure it parses without crashing.
-    
+void cpp_vuln_function_4() {
+    // Fixed char array instead of string
+    char buffer[256];
+}
+
+void cpp_vuln_function_5(const char* user_fmt) {
+    // printf with non-literal format string
+    printf(user_fmt);
+    fprintf(stdout, user_fmt);
+}
+
+void cpp_vuln_function_6(const string& user_input) {
+    // system() with string concat (command injection)
+    string cmd = "ls " + user_input;
+    system(cmd.c_str());
+}
+
+void cpp_vuln_function_7(int count) {
+    // int overflow in array size
+    int* data = new int[count * sizeof(int)];
+}
+
+void cpp_vuln_function_8() {
+    // ofstream incorrect permissions
+    ofstream ofs("secret.txt");
+    ofs << "secret";
+}
+
+int main() {
+    cpp_vuln_function_1();
+    cpp_vuln_function_2();
+    cpp_vuln_function_4();
+    cpp_vuln_function_6("test");
+    cpp_vuln_function_7(999999);
+    cpp_vuln_function_8();
     return 0;
 }

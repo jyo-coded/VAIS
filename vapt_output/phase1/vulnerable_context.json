@@ -1,0 +1,365 @@
+{
+  "source_file": "C:\\Users\\Lakshya\\PROJECTS\\VAIS\\tests\\samples\\vulnerable.java",
+  "language": "java",
+  "total_lines": 68,
+  "parse_success": true,
+  "parse_errors": [],
+  "entry_points": [
+    "main"
+  ],
+  "functions": {
+    "vulnerableMethod1": {
+      "start_line": 9,
+      "end_line": 15,
+      "params": [
+        "String userInput"
+      ],
+      "return_type": null,
+      "is_entry": false,
+      "calls": [
+        "getConnection",
+        "createStatement",
+        "executeQuery",
+        "prepareStatement"
+      ],
+      "pointer_ops": 0,
+      "loop_depth": 0,
+      "extern_input": false
+    },
+    "vulnerableMethod2": {
+      "start_line": 17,
+      "end_line": 21,
+      "params": [],
+      "return_type": null,
+      "is_entry": false,
+      "calls": [
+        "newInstance",
+        "newDocumentBuilder"
+      ],
+      "pointer_ops": 0,
+      "loop_depth": 0,
+      "extern_input": false
+    },
+    "vulnerableMethod3": {
+      "start_line": 23,
+      "end_line": 27,
+      "params": [
+        "java.io.InputStream in"
+      ],
+      "return_type": null,
+      "is_entry": false,
+      "calls": [
+        "readObject"
+      ],
+      "pointer_ops": 0,
+      "loop_depth": 0,
+      "extern_input": false
+    },
+    "vulnerableMethod4": {
+      "start_line": 29,
+      "end_line": 32,
+      "params": [
+        "String pathExt"
+      ],
+      "return_type": null,
+      "is_entry": false,
+      "calls": [],
+      "pointer_ops": 0,
+      "loop_depth": 0,
+      "extern_input": false
+    },
+    "vulnerableMethod5": {
+      "start_line": 34,
+      "end_line": 37,
+      "params": [
+        "String cmd"
+      ],
+      "return_type": null,
+      "is_entry": false,
+      "calls": [
+        "exec",
+        "getRuntime"
+      ],
+      "pointer_ops": 0,
+      "loop_depth": 0,
+      "extern_input": false
+    },
+    "vulnerableMethod6": {
+      "start_line": 39,
+      "end_line": 44,
+      "params": [],
+      "return_type": null,
+      "is_entry": false,
+      "calls": [],
+      "pointer_ops": 0,
+      "loop_depth": 0,
+      "extern_input": false
+    },
+    "vulnerableMethod7": {
+      "start_line": 46,
+      "end_line": 49,
+      "params": [],
+      "return_type": null,
+      "is_entry": false,
+      "calls": [
+        "length",
+        "getProperty"
+      ],
+      "pointer_ops": 0,
+      "loop_depth": 0,
+      "extern_input": false
+    },
+    "vulnerableMethod8": {
+      "start_line": 51,
+      "end_line": 54,
+      "params": [],
+      "return_type": null,
+      "is_entry": false,
+      "calls": [
+        "getBytes"
+      ],
+      "pointer_ops": 0,
+      "loop_depth": 0,
+      "extern_input": false
+    },
+    "main": {
+      "start_line": 56,
+      "end_line": 67,
+      "params": [
+        "String[] args"
+      ],
+      "return_type": null,
+      "is_entry": true,
+      "calls": [
+        "vulnerableMethod1",
+        "vulnerableMethod4",
+        "vulnerableMethod5",
+        "vulnerableMethod2",
+        "vulnerableMethod6",
+        "vulnerableMethod7",
+        "vulnerableMethod8"
+      ],
+      "pointer_ops": 0,
+      "loop_depth": 0,
+      "extern_input": true
+    }
+  },
+  "call_sites": [
+    {
+      "caller": "vulnerableMethod1",
+      "callee": "getConnection",
+      "line": 11,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod1",
+      "callee": "createStatement",
+      "line": 12,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod1",
+      "callee": "executeQuery",
+      "line": 13,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod1",
+      "callee": "prepareStatement",
+      "line": 14,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod2",
+      "callee": "newInstance",
+      "line": 19,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod2",
+      "callee": "newDocumentBuilder",
+      "line": 20,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod3",
+      "callee": "readObject",
+      "line": 26,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod5",
+      "callee": "exec",
+      "line": 36,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod5",
+      "callee": "getRuntime",
+      "line": 36,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod7",
+      "callee": "length",
+      "line": 48,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod7",
+      "callee": "getProperty",
+      "line": 48,
+      "args": []
+    },
+    {
+      "caller": "vulnerableMethod8",
+      "callee": "getBytes",
+      "line": 53,
+      "args": []
+    },
+    {
+      "caller": "main",
+      "callee": "vulnerableMethod1",
+      "line": 59,
+      "args": []
+    },
+    {
+      "caller": "main",
+      "callee": "vulnerableMethod4",
+      "line": 60,
+      "args": []
+    },
+    {
+      "caller": "main",
+      "callee": "vulnerableMethod5",
+      "line": 61,
+      "args": []
+    },
+    {
+      "caller": "main",
+      "callee": "vulnerableMethod2",
+      "line": 63,
+      "args": []
+    },
+    {
+      "caller": "main",
+      "callee": "vulnerableMethod6",
+      "line": 64,
+      "args": []
+    },
+    {
+      "caller": "main",
+      "callee": "vulnerableMethod7",
+      "line": 65,
+      "args": []
+    },
+    {
+      "caller": "main",
+      "callee": "vulnerableMethod8",
+      "line": 66,
+      "args": []
+    }
+  ],
+  "allocations": [],
+  "variables": [
+    {
+      "name": "conn",
+      "var_type": "Connection",
+      "function": "vulnerableMethod1",
+      "declared_line": 11,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "stmt",
+      "var_type": "Statement",
+      "function": "vulnerableMethod1",
+      "declared_line": 12,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "pstmt",
+      "var_type": "PreparedStatement",
+      "function": "vulnerableMethod1",
+      "declared_line": 14,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "factory",
+      "var_type": "DocumentBuilderFactory",
+      "function": "vulnerableMethod2",
+      "declared_line": 19,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "ois",
+      "var_type": "ObjectInputStream",
+      "function": "vulnerableMethod3",
+      "declared_line": 25,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "f",
+      "var_type": "File",
+      "function": "vulnerableMethod4",
+      "declared_line": 31,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "password",
+      "var_type": "String",
+      "function": "vulnerableMethod6",
+      "declared_line": 41,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "API_KEY",
+      "var_type": "String",
+      "function": "vulnerableMethod6",
+      "declared_line": 42,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "privateKey",
+      "var_type": "String",
+      "function": "vulnerableMethod6",
+      "declared_line": 43,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "keySpec",
+      "var_type": "javax.crypto.spec.SecretKeySpec",
+      "function": "vulnerableMethod8",
+      "declared_line": 53,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    },
+    {
+      "name": "app",
+      "var_type": "VulnerableApp",
+      "function": "main",
+      "declared_line": 57,
+      "is_pointer": false,
+      "is_array": false,
+      "array_size": null
+    }
+  ]
+}

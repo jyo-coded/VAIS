@@ -32,6 +32,8 @@ from rules.python_rules import PYTHON_RULES
 from rules.go_rules import GO_RULES
 from rules.java_rules import JAVA_RULES
 from rules.cpp_rules import CPP_RULES
+from core.standards_engine import StandardsEngine
+from core.taint_analyzer import TaintAnalyzer
 
 console = Console()
 
@@ -235,6 +237,19 @@ def run_phase2(
             progress.advance(task)
 
     result.duration_s = time.time() - start
+
+    # ── Taint & Standards Enhancement ──
+    if verbose:
+        console.print("  [dim]Attaching Standards citations and Taint Analysis...[/dim]")
+    
+    standards = StandardsEngine()
+    taint_analyzer = TaintAnalyzer()
+
+    for vuln in result.collection._vulns:
+        vuln.standards_citation = standards.format_citation(vuln.cwe.value)
+
+    if phase1_result.merged_call_graph:
+        taint_analyzer.analyze(phase1_result.merged_call_graph.graph, result.collection._vulns)
 
     if output_dir:
         result.save(output_dir)

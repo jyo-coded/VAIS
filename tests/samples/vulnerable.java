@@ -1,38 +1,68 @@
-import java.io.InputStream;
-import java.security.MessageDigest;
-import java.util.Scanner;
+import java.sql.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ObjectInputStream;
+import java.io.File;
+import java.io.IOException;
 
-class Vulnerable {
-    
-    // Hardcoded Secret Rule (CWE-798)
-    private static final String API_KEY = "super_secret_api_key_12345";
-    
-    public static void main(String[] args) {
-        System.out.println("Starting VAIS test");
-        
+public class VulnerableApp {
+
+    public void vulnerableMethod1(String userInput) throws Exception {
+        // SQL Injection via string concat
+        Connection conn = DriverManager.getConnection("url", "user", "pass");
+        Statement stmt = conn.createStatement();
+        stmt.executeQuery("SELECT * FROM users WHERE name = '" + userInput + "'");
+        PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM users WHERE name = '" + userInput + "'");
+    }
+
+    public void vulnerableMethod2() throws Exception {
+        // XXE via DocumentBuilderFactory
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.newDocumentBuilder();
+    }
+
+    public void vulnerableMethod3(java.io.InputStream in) throws Exception {
+        // Unsafe Deserialization
+        ObjectInputStream ois = new ObjectInputStream(in);
+        ois.readObject();
+    }
+
+    public void vulnerableMethod4(String pathExt) {
+        // Path Traversal
+        File f = new File("/var/www/uploads/" + pathExt);
+    }
+
+    public void vulnerableMethod5(String cmd) throws IOException {
+        // Command Injection
+        Runtime.getRuntime().exec("ping " + cmd);
+    }
+
+    public void vulnerableMethod6() {
+        // Hardcoded Credential
+        String password = "SuperSecretPassword";
+        String API_KEY = "1234567890abcdef1234567890abcdef";
+        String privateKey = "BEGIN RSA PRIVATE KEY...";
+    }
+
+    public void vulnerableMethod7() {
+        // Null Return Not Checked
+        System.getProperty("missingProp").length();
+    }
+
+    public void vulnerableMethod8() throws Exception {
+        // Hardcoded Crypto Key
+        javax.crypto.spec.SecretKeySpec keySpec = new javax.crypto.spec.SecretKeySpec("mysecretkey12345".getBytes(), "AES");
+    }
+
+    public static void main(String[] args) throws Exception {
+        VulnerableApp app = new VulnerableApp();
         if (args.length > 0) {
-            runCommand(args[0]);
+            app.vulnerableMethod1(args[0]);
+            app.vulnerableMethod4(args[0]);
+            app.vulnerableMethod5(args[0]);
         }
-        hashData("test_data");
-    }
-
-    private static void runCommand(String cmd) {
-        try {
-            // Command Injection via Runtime.exec (CWE-78)
-            Runtime.getRuntime().exec("ping -c 4 " + cmd);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void hashData(String data) {
-        try {
-            // Weak Crypto (CWE-327)
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] hash = md.digest(data.getBytes());
-            System.out.println(new String(hash));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        app.vulnerableMethod2();
+        app.vulnerableMethod6();
+        app.vulnerableMethod7();
+        app.vulnerableMethod8();
     }
 }
