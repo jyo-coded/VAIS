@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronDown, ChevronRight, Folder, FileCode, Search, FolderOpen, Upload, MousePointerClick, Activity } from 'lucide-react';
+import { ChevronDown, ChevronRight, Folder, FileCode, Search, FolderOpen, Upload, MousePointerClick, Activity, Zap } from 'lucide-react';
 
 type FileNode = {
   name: string;
@@ -26,11 +26,11 @@ interface ScanConsoleProps {
 }
 
 const DEMO_SAMPLES: SampleFile[] = [
-  { name: 'vulnerable.c',    path: 'tests/samples/vulnerable.c',    language: 'C',      description: 'Buffer overflows, format strings, strcpy misuse',  known_vulns: 6 },
-  { name: 'vulnerable.cpp',  path: 'tests/samples/vulnerable.cpp',  language: 'C++',    description: 'Memory leaks, UAF, double-free, integer overflow',  known_vulns: 8 },
-  { name: 'vulnerable.go',   path: 'tests/samples/vulnerable.go',   language: 'Go',     description: 'Race conditions, unchecked errors, unsafe pointers', known_vulns: 4 },
-  { name: 'vulnerable.java', path: 'tests/samples/vulnerable.java', language: 'Java',   description: 'SQL injection, XXE, hardcoded secrets, weak crypto',  known_vulns: 7 },
-  { name: 'vulnerable.py',   path: 'tests/samples/vulnerable.py',   language: 'Python', description: 'Code injection via eval, pickle deserialization, path traversal', known_vulns: 5 },
+  { name: 'vulnerable.c', path: 'tests/samples/vulnerable.c', language: 'C', description: 'Buffer overflows, format strings, strcpy misuse', known_vulns: 6 },
+  { name: 'vulnerable.cpp', path: 'tests/samples/vulnerable.cpp', language: 'C++', description: 'Memory leaks, UAF, double-free, integer overflow', known_vulns: 8 },
+  { name: 'vulnerable.go', path: 'tests/samples/vulnerable.go', language: 'Go', description: 'Race conditions, unchecked errors, unsafe pointers', known_vulns: 4 },
+  { name: 'vulnerable.java', path: 'tests/samples/vulnerable.java', language: 'Java', description: 'SQL injection, XXE, hardcoded secrets, weak crypto', known_vulns: 7 },
+  { name: 'vulnerable.py', path: 'tests/samples/vulnerable.py', language: 'Python', description: 'Code injection via eval, pickle deserialization, path traversal', known_vulns: 5 },
 ];
 
 const LANG_COLORS: Record<string, string> = {
@@ -55,22 +55,17 @@ export function ScanConsole({ files, onScan, scanningPath, status }: ScanConsole
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
-    const items = Array.from(e.dataTransfer.items);
+    const files = Array.from(e.dataTransfer.files);
     // Find first code file
-    for (const item of items) {
-      if (item.kind === 'file') {
-        const file = item.getAsFile();
-        if (file) {
-          // Upload to backend
-          const fd = new FormData();
-          fd.append('file', file);
-          fetch('/api/upload', { method: 'POST', body: fd })
-            .then(r => r.json())
-            .then((d: { path: string }) => onScan(d.path, 'auto'))
-            .catch(console.error);
-          return;
-        }
-      }
+    if (files.length > 0) {
+      const file = files[0];
+      // Upload to backend
+      const fd = new FormData();
+      fd.append('file', file);
+      fetch('/api/upload', { method: 'POST', body: fd })
+        .then(r => r.json())
+        .then((d: { path: string }) => onScan(d.path, 'auto'))
+        .catch(console.error);
     }
   }, [onScan]);
 
@@ -107,9 +102,9 @@ export function ScanConsole({ files, onScan, scanningPath, status }: ScanConsole
                 ? <ChevronDown size={14} style={{ color: '#E85D04', flexShrink: 0 }} />
                 : <ChevronRight size={14} style={{ color: '#E85D04', flexShrink: 0 }} />)
               : <span style={{
-                  width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
-                  background: item.status === 'vuln' ? '#f87171' : item.status === 'clean' ? '#4ade80' : item.status === 'scanning' ? '#fcd34d' : 'rgba(255,255,255,0.2)',
-                }} />
+                width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+                background: item.status === 'vuln' ? '#f87171' : item.status === 'clean' ? '#4ade80' : item.status === 'scanning' ? '#fcd34d' : 'rgba(255,255,255,0.2)',
+              }} />
             }
             {item.type === 'directory'
               ? <FolderOpen size={14} style={{ color: '#E85D04', flexShrink: 0 }} />
@@ -133,33 +128,50 @@ export function ScanConsole({ files, onScan, scanningPath, status }: ScanConsole
     });
 
   return (
-    <section id="section-hero" style={{ minHeight: '100vh', paddingTop: 120, paddingBottom: 80, paddingLeft: 40, paddingRight: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+    <section id="section-hero" style={{
+      minHeight: 'auto',
+      paddingTop: 160,
+      paddingBottom: 80,
+      paddingLeft: 40,
+      paddingRight: 40,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
       {/* Molten pillar */}
       <div className="molten-pillar" />
 
       {/* Hero Text */}
-      <div style={{ zIndex: 10, textAlign: 'center', marginBottom: 64, position: 'relative' }}>
-        <p className="section-kicker" style={{ color: '#E85D04', marginBottom: 16 }}>Target Selection</p>
-        <h2 style={{ fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 800, lineHeight: 1.08, margin: '0 0 20px', letterSpacing: '-0.02em' }}>
-          Identify flaws.<br/>
-          <span style={{ background: 'linear-gradient(135deg, #FFB050, #E85D04)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-            Deploy intelligence.
+      <div style={{ zIndex: 10, textAlign: 'center', marginBottom: 80, position: 'relative' }}>
+        <h2 style={{
+          fontSize: 'clamp(28px, 6vw, 64px)',
+          fontWeight: 800,
+          lineHeight: 1.1,
+          margin: '0 0 24px',
+          letterSpacing: '-0.04em',
+          color: 'white'
+        }}>
+          Identify flaws.<br />
+          Deploy <span style={{ background: 'linear-gradient(135deg, #FFB050, #E85D04)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            intelligence.
           </span>
         </h2>
-        <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.45)', maxWidth: 520, margin: '0 auto 32px', lineHeight: 1.6, fontWeight: 400 }}>
-          Select a project file, drop your code below, or use the demo vulnerable samples to run the full autonomous pipeline.
+        <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.5)', maxWidth: 580, margin: '0 auto 40px', lineHeight: 1.6, fontWeight: 400 }}>
+          Select a project architecture from the matrix below. VAIS will autonomously orchestrate ML-backed analysis and agent-driven remediation.
         </p>
 
-        {/* Status Indicators */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 28, fontSize: 13, fontWeight: 600 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: status.backend === 'connected' ? '#4ade80' : 'rgba(255,255,255,0.4)' }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: status.backend === 'connected' ? '#4ade80' : '#71717a', animation: status.backend === 'connected' ? 'moltenPulse 2s ease infinite' : 'none' }} />
-            API {status.backend}
+        {/* Status Indicators - Upgraded */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 32, fontSize: 13, fontWeight: 700 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: status.backend === 'connected' ? '#4ade80' : 'rgba(255,255,255,0.3)' }}>
+            <Activity size={14} style={{ color: status.backend === 'connected' ? '#4ade80' : 'rgba(255,255,255,0.2)' }} />
+            Agent Cluster: <span style={{ color: status.backend === 'connected' ? '#4ade80' : 'rgba(255,255,255,0.4)' }}>{status.backend}</span>
           </div>
-          <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: status.ollama.reachable ? '#4ade80' : '#fbbf24' }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: status.ollama.reachable ? '#4ade80' : '#fbbf24' }} />
-            LLM {status.ollama.reachable ? 'Online' : status.ollama.mode === 'fallback' ? 'Fallback' : 'Offline'}
+          <div style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: status.ollama.reachable ? '#4ade80' : '#fbbf24' }}>
+            <Zap size={14} style={{ color: status.ollama.reachable ? '#4ade80' : '#fbbf24' }} />
+            Security Engine: <span style={{ color: status.ollama.reachable ? '#4ade80' : '#fbbf24' }}>{status.ollama.reachable ? 'Powered' : status.ollama.mode === 'fallback' ? 'Booting/Fallback' : 'Offline'}</span>
           </div>
         </div>
       </div>
@@ -229,7 +241,7 @@ export function ScanConsole({ files, onScan, scanningPath, status }: ScanConsole
                       >
                         <div style={{
                           width: 36, height: 36, borderRadius: 8, flexShrink: 0,
-                          background: `rgba(${LANG_COLORS[sample.language] ? parseInt(LANG_COLORS[sample.language].slice(1,3),16) + ',' + parseInt(LANG_COLORS[sample.language].slice(3,5),16) + ',' + parseInt(LANG_COLORS[sample.language].slice(5,7),16) : '255,255,255'}, 0.15)`,
+                          background: `rgba(${LANG_COLORS[sample.language] ? parseInt(LANG_COLORS[sample.language].slice(1, 3), 16) + ',' + parseInt(LANG_COLORS[sample.language].slice(3, 5), 16) + ',' + parseInt(LANG_COLORS[sample.language].slice(5, 7), 16) : '255,255,255'}, 0.15)`,
                           border: `1px solid rgba(255,255,255,0.08)`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           fontSize: 11, fontWeight: 800, color: LANG_COLORS[sample.language] ?? 'white',

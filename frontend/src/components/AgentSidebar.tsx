@@ -1,4 +1,3 @@
-import React from 'react';
 import { AGENT_ICONS } from './AgentIcons';
 
 export const AGENTS = [

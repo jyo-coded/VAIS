@@ -1,4 +1,3 @@
-import React from 'react';
 import { AGENTS } from './AgentSidebar';
 import { AGENT_ICONS } from './AgentIcons';
 import { hexToRgb } from './AgentSidebar';

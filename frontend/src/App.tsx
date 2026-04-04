@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { ScanConsole } from './components/ScanConsole';
 import { AgentTerminal, isUser } from './components/AgentTerminal';
@@ -6,6 +6,7 @@ import type { AgentMessage, AnyMessage } from './components/AgentTerminal';
 import { MLAnalytics } from './components/MLAnalytics';
 import { Documentation } from './components/Documentation';
 import { AgentGlossary } from './components/AgentGlossary';
+import { routeIntent } from './lib/IntentRouter';
 
 type FileNode = {
   name: string; path: string; type: 'directory' | 'file';
@@ -14,13 +15,22 @@ type FileNode = {
   children?: FileNode[];
 };
 
-type Finding = {
+export type Finding = {
   vuln_id: string; cwe: string; rule_name: string; source_file: string; language: string;
   function_name: string; line_start: number; line_end: number; title: string; description: string;
   code_snippet: string; severity: string; confidence: number; taint_confirmed: boolean;
   taint_path?: string; standards_citation?: string; exploit_prob?: number; risk_score?: number;
   composite_risk: number; patch_strategy?: string; patch_applied?: boolean; status: string;
   agent_notes: string[]; ml_severity?: string;
+};
+
+export type PatchRecord = {
+  id: string;
+  vuln_id: string;
+  rule_name: string;
+  file_path: string;
+  timestamp: string;
+  strategy: string;
 };
 
 type PlotsResponse = Record<string, string>;
@@ -55,6 +65,7 @@ export default function App() {
   const [plots, setPlots] = useState<PlotsResponse>({});
   const [status, setStatus] = useState<SystemStatus>(initialStatus);
   const [sourceCode, setSourceCode] = useState<{ path: string; code: string } | null>(null);
+  const [patchHistory, setPatchHistory] = useState<PatchRecord[]>([]);
 
   const socketRef = useRef<Socket | null>(null);
 
@@ -118,6 +129,10 @@ export default function App() {
       setSourceCode(data);
     });
 
+    socketRef.current.on('scan_results', (data: { findings: Finding[] }) => {
+      setFindings(data.findings);
+    });
+
     socketRef.current.on('scan_complete', (data: { results?: Finding[] }) => {
       setScanningPath(null);
       setActiveAgent(null);
@@ -149,20 +164,139 @@ export default function App() {
     }]);
     socketRef.current?.emit('trigger_scan', { path, lang });
 
-    // Navigate to console and scroll to agents section
     setPage('console');
-    setTimeout(() => {
-      document.getElementById('section-agents')?.scrollIntoView({ behavior: 'smooth' });
-    }, 200);
   };
 
   const confirmPatch = (vulnId: string, approved: boolean) => {
     socketRef.current?.emit('confirm_patch', { vuln_id: vulnId, approved });
+
+    if (approved) {
+      const finding = findings.find(f => f.vuln_id === vulnId);
+      if (finding) {
+        setPatchHistory(prev => [
+          {
+            id: Math.random().toString(36).substr(2, 9),
+            vuln_id: vulnId,
+            rule_name: finding.rule_name,
+            file_path: finding.source_file,
+            timestamp: new Date().toLocaleTimeString(),
+            strategy: finding.patch_strategy || 'Automated Remediation'
+          },
+          ...prev
+        ]);
+      }
+    }
+
+    // Remove the patch from local state so it stops showing in CodeViewer immediately
+    setMessages(prev => prev.map(m => (!isUser(m) && m.vuln_id === vulnId && m.message_type === 'patch_request') ? { ...m, patch_diff: undefined } : m));
   };
 
-  const handleUserMessage = (text: string) => {
-    setMessages(prev => [...prev, { type: 'user', text }]);
-    socketRef.current?.emit('user_message', { text });
+  const buildSystemPrompt = () => {
+    const filename = sourceCode?.path?.split('/').pop() || 'None';
+    const lang = findings[0]?.language || 'Unknown';
+    const top5 = findings
+      .sort((a, b) => (b.risk_score || 0) - (a.risk_score || 0))
+      .slice(0, 5)
+      .map(f => ({ vuln_id: f.vuln_id, cwe: f.cwe, function: f.function_name, line: f.line_start, rule: f.rule_name, risk_score: f.risk_score }));
+    
+    const taintIds = findings.filter(f => f.taint_confirmed).map(f => f.vuln_id);
+    const criticals = findings.filter(f => f.severity === 'CRITICAL').length;
+    const highs = findings.filter(f => f.severity === 'HIGH').length;
+
+    return `You are VAIS — the Vulnerability Assessment Intelligence System. You are a precision security AI embedded in a professional SAST platform.
+    
+    Orchestrate five specialist agents:
+    - Tanuki (Recon): Speaks like a recon specialist — precise, lists entry points.
+    - Tsushima (Memory): Speaks with urgency about memory safety (buffer overflows, UAF). Names line and function.
+    - Iriomote (Taint): Analytical about data flow — traces tainted input source to sink.
+    - Raijū (ML): Authrotity on ML scores — explains features and probabilities.
+    - Yamabiko (Patch): Patch engineer — proposes exact code fixes.
+
+    CURRENT SCAN STATE:
+    File: ${filename}
+    Language: ${lang}
+    Findings: ${findings.length} (Critical: ${criticals}, High: ${highs})
+    Top Results: ${JSON.stringify(top5)}
+    Taint Confirmed: ${taintIds.join(', ')}
+    
+    Always respond AS the requested agent if mentioned. Detect user intent for line numbers or CWEs and answer with absolute technical precision. Cap responses at 150 words. Be direct.`;
+  };
+
+  const handleUserMessage = async (rawText: string) => {
+    const { enrichedText, suggestedAgent } = routeIntent(rawText, findings);
+    
+    const userMsg: AnyMessage = { type: 'user', text: rawText };
+    setMessages(prev => [...prev, userMsg]);
+
+    const assistantId = Math.random().toString(36).substr(2, 9);
+    const agentMsg: AgentMessage = {
+      id: assistantId,
+      agent_name: suggestedAgent,
+      species: suggestedAgent === 'VAIS' ? 'SECURITY INTELLIGENCE' : suggestedAgent.toUpperCase(),
+      colour: suggestedAgent === 'Tanuki' ? '#E85D04' : suggestedAgent === 'Tsushima' ? '#3B82F6' : suggestedAgent === 'Iriomote' ? '#10B981' : suggestedAgent === 'Raijū' ? '#8B5CF6' : suggestedAgent === 'Yamabiko' ? '#F59E0B' : '#FFB050',
+      text: '',
+      message_type: 'info'
+    };
+    
+    setMessages(prev => [...prev, agentMsg]);
+    setActiveAgent(suggestedAgent);
+
+    // Build Chat History (Last 6 messages)
+    const history = messages
+      .slice(-6)
+      .map(m => ({
+        role: isUser(m) ? 'user' : 'assistant',
+        content: m.text
+      }));
+
+    try {
+      const response = await fetch('http://localhost:11434/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'qwen2.5-coder:7b',
+          stream: true,
+          messages: [
+            { role: 'system', content: buildSystemPrompt() },
+            ...history,
+            { role: 'user', content: enrichedText }
+          ]
+        })
+      });
+
+      if (!response.body) return;
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let accumulatedText = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n').filter(l => l.trim());
+        
+        for (const line of lines) {
+          try {
+            const json = JSON.parse(line);
+            if (json.message?.content) {
+              accumulatedText += json.message.content;
+              setMessages(prev => prev.map(m => 
+                (isUser(m) || m.id !== assistantId) ? m : { ...m, text: accumulatedText }
+              ));
+            }
+          } catch (e) {
+            console.error('Error parsing Ollama chunk:', e);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Ollama communication error:', err);
+      // Fallback or error indicator
+      setMessages(prev => prev.map(m => 
+        (isUser(m) || m.id !== assistantId) ? m : { ...m, text: 'Ollama not reachable or model not loaded. Please ensure qwen2.5-coder:7b is running at localhost:11434.' }
+      ));
+    }
   };
 
   const handleNavClick = (id: NavPage) => {
@@ -191,7 +325,7 @@ export default function App() {
               background: 'linear-gradient(120deg, #FFB050, #E85D04)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
               backgroundClip: 'text', fontFamily: 'Inter, sans-serif',
-            } as React.CSSProperties}
+            } as CSSProperties}
           >
             VAIS
           </button>
@@ -250,6 +384,7 @@ export default function App() {
               onConfirmPatch={confirmPatch}
               onUserMessage={handleUserMessage}
               sourceCode={sourceCode}
+              findings={findings}
             />
             <MLAnalytics findings={findings} plots={plots} />
           </>
@@ -263,7 +398,7 @@ export default function App() {
           </div>
         )}
 
-        {page === 'docs' && <Documentation />}
+        {page === 'docs' && <Documentation findings={findings} patchHistory={patchHistory} />}
       </div>
     </>
   );
